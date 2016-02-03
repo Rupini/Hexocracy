@@ -28,7 +28,8 @@ namespace Hexocracy
             {
                 transform.position = Camera.main.WorldToScreenPoint(target.t.position + new Vector3(0, 2, 0));
                 text.text = "<color=red>" + target.HP + "/" + target.MaxHP + "</color>\n" +
-                    "<color=blue>" + target.MP + "/" + target.MaxMP + "</color>";
+                    "<color=olive>" + target.AP + "/" + target.MaxAP + "</color>\n" +
+                    "<color=aqua>" + Mathf.Round(target.Initiative)+ "</color>";
             }
             else
                 gameObject.SetActive(false);

@@ -8,7 +8,8 @@ namespace Hexocracy
 {
     public class GameInstance : MonoBehaviour
     {
-        private List<PlayerController> controllers;
+        private FigureFactory figureFactory;
+        private List<Player> players;
 
         private void Awake()
         {
@@ -16,16 +17,19 @@ namespace Hexocracy
             //    new int[][] { new int[] { 3, 4 }, new int[] { 2, 4 }, new int[] { 2, 3 } },
             //null);
 
-            var players = Player.Builder.Build(new string[] { "First guy", "Second guy" },
-               new int[][] { new int[] { 1 }, new int[] { 0 } },
-           null);
+            players = Player.Builder.Build(new string[] { "First guy", "Second guy" },
+                                           new int[][] { new int[] { 1 }, new int[] { 0 } },
+                                           null);
 
-            controllers = PlayerController.Builder.Build(players);
+            var container = new FigureContainer();
+            figureFactory = new FigureFactory(container);
+            TurnController.Initialize(container);
         }
 
         private void Start()
         {
-            TurnController.Start(controllers);
+            FindObjectsOfType<FigureEditor>().ToList().ForEach(f => f.InitializeForGame());
+            TurnController.Start();
         }
     }
 }

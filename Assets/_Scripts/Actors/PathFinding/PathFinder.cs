@@ -9,13 +9,6 @@ namespace Hexocracy
 {
     public abstract class PathFinder
     {
-        public enum PassibilityType
-        {
-            Ok = 0,
-            AbsoluteObstacle = 1,
-            RelativeObstacle = 2
-        }
-
         protected Hex destination;
         protected Func<Hex, PassibilityType> checkPassibility;
         protected Func<Hex, bool> isTarget;

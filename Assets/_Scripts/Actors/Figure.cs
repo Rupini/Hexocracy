@@ -8,20 +8,16 @@ namespace Hexocracy
 {
     public class Figure : BouncingObject
     {
-        public int BaseHP;
-
-        private int _hp;
-
         protected Stat reds;
         protected Stat blues;
         protected Stat greens;
 
         protected DynamicStat hp;
-        protected DynamicStat mp;
         protected DynamicStat ap;
-
         protected Stat damage;
-        protected Stat armor;
+        protected Stat initiative;
+
+        protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
 
         public float MaxHP { get { return hp; } }
 
@@ -37,45 +33,63 @@ namespace Hexocracy
             }
         }
 
-        public int MaxMP { get { return mp; } }
+        public int MaxAP { get { return ap; } }
 
-        public override int MP
+        public override int AP
         {
             get
             {
-                return (int)mp.CurrValue;
+                return (int)ap.CurrValue;
             }
             protected set
             {
-                mp.CurrValue = value;
+                ap.CurrValue = value;
             }
         }
 
-        protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
+        public float Initiative { get { return initiative; } }
 
         #region Initialize
         protected override void Awake()
         {
             base.Awake();
-            InitializeStats();
+            r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
         }
 
-        protected virtual void InitializeStats()
+        public override void Initialize(FigureContainer container, FigureData data)
+        {
+            base.Initialize(container, data);
+            Owner = Player.GetByIndex(data.owner);
+
+            r.material = Resources.Load<Material>("Models/Materials/whiteColor");
+            r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
+            r.material.color = data.color;
+
+            InitStats(data);
+        }
+
+        protected virtual void InitStats(FigureData data)
         {
             Stat stat;
 
-            stat = new DynamicStat(StatType.HealthPoints, 40, 40);
+            reds = new Stat(StatType.Red, 0);
+            stat = new DynamicStat(StatType.HealthPoints, data.baseHP, new List<Stat>() { reds }, x => x[0] * 2);
             hp = (DynamicStat)stat;
             stats.Add(stat.Type, stat);
 
-            stat = new DynamicStat(StatType.MovePoints, baseMovePoints, baseMovePoints);
-            mp = (DynamicStat)stat;
+            stat = new DynamicStat(StatType.ActionPoints, data.actionPoints);
+            ap = (DynamicStat)stat;
             stats.Add(stat.Type, stat);
 
-            stat = new Stat(StatType.Damage, 8);
+            greens = new Stat(StatType.Green, 0);
+            stat = new Stat(StatType.Damage, data.damage, new List<Stat>() { greens }, x => x[0]);
             damage = stat;
             stats.Add(stat.Type, stat);
 
+            blues = new Stat(StatType.Blue, 0);
+            stat = new Stat(StatType.Initiative, data.initiative, new List<Stat>() { blues }, x => x[0] * 10f / (100 + x[0] * 10f));
+            initiative = stat;
+            stats.Add(stat.Type, stat);
         }
 
         #endregion
@@ -83,7 +97,7 @@ namespace Hexocracy
 
         public void OnAttack(Figure attacker, float dmg)
         {
-            hp.CurrValue -= 0;// dmg;
+            hp.CurrValue -= dmg;
             if (hp.CurrValue <= 0)
                 Destroy();
         }
@@ -94,34 +108,37 @@ namespace Hexocracy
         {
             if (figure.Owner.IsAlly(Owner))
             {
-                if (forced && mp.CurrValue <= 0)
-                    figure.OnAttack(this, -damage * (mp.CurrValue * 0.5f));
+                if (forced && ap.CurrValue <= 0)
+                    figure.OnAttack(this, (damage - bounceHeight * 2) * (-ap.CurrValue * 0.5f));
 
             }
             else
-                figure.OnAttack(this, damage);
+                figure.OnAttack(this, damage - bounceHeight * 2);
         }
 
         protected override void OnHexLanded(Hex hex, int bounceHeight)
         {
-            //if (bounceHeight < 0)
-            //{
-            //    OnAttack(this, -bounceHeight * damage);
-            //}
+            if (bounceHeight < -1)
+            {
+                OnAttack(this, -bounceHeight * 2);
+            }
         }
 
-        protected override void OnRoundStarted(bool newCicle)
+        protected override void OnTurnStarted(bool newRound)
         {
-            mp.CurrValue = mp.Value;
+            if (newRound)
+            {
+                ap.CurrValue = ap.Value;
+            }
         }
 
-        protected override void OnRoundFinished()
+        protected override void OnTurnFinished()
         {
         }
 
         protected override void OnForcedMovePenalti()
         {
-            OnAttack(this, -damage * mp.CurrValue);
+            OnAttack(this, -damage * ap.CurrValue);
         }
         #endregion
     }

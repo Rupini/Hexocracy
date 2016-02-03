@@ -9,14 +9,14 @@ namespace Hexocracy
 {
     public abstract class BouncingObject : CachedMonoBehaviour, IContainable
     {
-        public int ownerPlayerIndex;
-        public int baseMovePoints;
+        private FigureContainer container;
 
-        public abstract int MP { get; protected set; }
-        [Range(30, 75)]
-        public float angleInDegree;
-        public int jumpUpHeight;
-        public int jumpDownHeight;
+        protected int ownerPlayerIndex;
+        protected bool active;
+
+        public abstract int AP { get; protected set; }
+
+        private float angleInDegree;
 
         private float angle { get { return angleInDegree * Mathf.Deg2Rad; } }
         private float g;
@@ -38,26 +38,28 @@ namespace Hexocracy
         protected override void Awake()
         {
             base.Awake();
-            //pathFinder = new LiPathFinder(jumpUpHeight, jumpDownHeight);
-            pathFinder = new DijkstraPathFinder(jumpUpHeight, jumpDownHeight);
             g = -Physics.gravity.y;
+
+            TurnController.TurnStarted += OnTurnStarted;
+            TurnController.TurnFinished += OnTurnFinished;
+        }
+
+        public virtual void Initialize(FigureContainer container, FigureData data)
+        {
+            this.container = container;
+
+            angleInDegree = data.jumpingAngle;
+            pathFinder = new DijkstraPathFinder(data.jumpUpHeight, data.jumpDownHeight);
             body = GetComponent<Rigidbody>();
             Height = GetComponent<Collider>().bounds.size.y;
 
-            TurnController.RoundStarted += OnRoundStarted;
-            TurnController.RoundFinished += OnRoundFinished;
+            DefineStartHex();
+
+            container.OnFigureCreated((Figure)this);
         }
 
         protected virtual void Start()
         {
-            DefineStartHex();
-
-            Owner = Player.GetByIndex(ownerPlayerIndex);
-
-            if (ownerPlayerIndex == 0)
-                r.material.mainTexture = Resources.Load<Texture>("Models/redColor");
-            else
-                r.material.mainTexture = Resources.Load<Texture>("Models/greenColor");
         }
 
         private void DefineStartHex()
@@ -67,7 +69,6 @@ namespace Hexocracy
             {
                 currentHex = hit.collider.GetComponent<Hex>();
                 currentHex.OnContentAppeared(this);
-
                 t.position = currentHex.GroundCenter;
             }
             else
@@ -75,10 +76,32 @@ namespace Hexocracy
         }
         #endregion
         #region MoveCommand
+
+        public void Deactivate()
+        {
+            active = false;
+            Owner.SwitchActiveState(false);
+            if (this)//Cruntch!
+            {
+                r.material.color = defaultColor;
+            }
+        }
+
+        private Color defaultColor;
+
+        public void Activate()
+        {
+            active = true;
+            Owner.SwitchActiveState(true);
+            defaultColor = r.material.color;
+            r.material.color = new Color(1, 1, 1);
+        }
+
         public MoveResult MoveTo(Hex hex, bool forced)
         {
+            if (!active) return MoveResult.None;
             if (inFlight) return MoveResult.AlreadyInFlight;
-            if (MP <= 0) return MoveResult.NotEnoughMovePoints;
+            if (AP <= 0) return MoveResult.NotEnoughActionPoints;
             if (Owner == hex.Content.Owner) return MoveResult.BadDestination;
 
             this.forced = forced;
@@ -86,8 +109,8 @@ namespace Hexocracy
 
             if (currPath.Useful)
             {
-                if (currPath.Count > MP)
-                    return MoveResult.NotEnoughMovePoints;
+                if (currPath.TotalCost > AP)
+                    return MoveResult.NotEnoughActionPoints;
             }
             else
                 return MoveResult.Impassable;
@@ -96,7 +119,7 @@ namespace Hexocracy
             return MoveResult.Ok;
         }
 
-        private Path GetPath(Hex destination = null, Func<Hex, LiPathFinder.PassibilityType> passibilityCondition = null, Func<Hex, bool> targetCondition = null)
+        private Path GetPath(Hex destination = null, Func<Hex, PassibilityType> passibilityCondition = null, Func<Hex, bool> targetCondition = null)
         {
             Path path;
             if (targetCondition == null)
@@ -113,9 +136,9 @@ namespace Hexocracy
                  passibilityCondition: (hex) =>
                 {
                     if (hex.Content.Owner.IsEnemy(Owner))
-                        return LiPathFinder.PassibilityType.AbsoluteObstacle;
+                        return PassibilityType.AbsoluteObstacle;
                     else
-                        return LiPathFinder.PassibilityType.Ok;
+                        return PassibilityType.Ok;
                 },
                 targetCondition: (hex) => { return !hex.HasFigure; });
 
@@ -130,14 +153,14 @@ namespace Hexocracy
 
         private bool MoveToPreviusHex()
         {
-           currPath = GetPath(previousHex);
-           if (currPath.Useful && currPath.Count == 1)
-           {
-               ExecuteMove();
-               return true;
-           }
-           else
-               return false;
+            currPath = GetPath(previousHex);
+            if (currPath.Useful && currPath.Count == 1)
+            {
+                ExecuteMove();
+                return true;
+            }
+            else
+                return false;
         }
 
         private void ExecuteMove()
@@ -164,9 +187,9 @@ namespace Hexocracy
         private void StartJump(float dt)
         {
             currentHex.OnContentMissed(this);
-            MP -= currPath.CurrentCost;
+            AP -= currPath.CurrentCost;
 
-            if (MP < 0) OnForcedMovePenalti();
+            if (AP < 0) OnForcedMovePenalti();
 
             inFlight = true;
             StartCoroutine(FinishJump(dt));
@@ -214,7 +237,7 @@ namespace Hexocracy
                                 if (content.Owner.IsEnemy(Owner))
                                 {
                                     forced = true;
-                                    if(!MoveToPreviusHex())
+                                    if (!MoveToPreviusHex())
                                     {
                                         inRetreatPassing = true;
                                         MoveToNearestEmptyHex();
@@ -290,9 +313,9 @@ namespace Hexocracy
 
         protected abstract void OnHexLanded(Hex hex, int bounceHeight);
 
-        protected abstract void OnRoundStarted(bool newCicle);
+        protected abstract void OnTurnStarted(bool newRound);
 
-        protected abstract void OnRoundFinished();
+        protected abstract void OnTurnFinished();
         #endregion
         #region IContainable
 
@@ -300,7 +323,7 @@ namespace Hexocracy
 
         public float Height { get; private set; }
 
-        public Player Owner { get; private set; }
+        public Player Owner { get; protected set; }
 
         public ContentType Type { get { return ContentType.Figure; } }
 
@@ -308,9 +331,10 @@ namespace Hexocracy
         {
             Destroyed = true;
             currentHex.OnContentMissed(this);
+            container.OnFigureRemoved((Figure)this);
 
-            TurnController.RoundStarted -= OnRoundStarted;
-            TurnController.RoundFinished -= OnRoundFinished;
+            TurnController.TurnStarted -= OnTurnStarted;
+            TurnController.TurnFinished -= OnTurnFinished;
 
             Destroy(go);
         }

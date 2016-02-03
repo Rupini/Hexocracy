@@ -17,10 +17,10 @@ namespace Hexocracy.CustomEditor
         private int currCC;
         private Dictionary<int, HexEditor> hexMap;
 
-        public MapFactory(HexEditor prototype, Transform container, int circleCount)
+        public MapFactory(HexEditor prototype, int circleCount)
         {
             this.prototype = prototype;
-            this.container = container;
+            this.container = new GameObject("Hex Container").transform;
             this.circleCount = circleCount;
             r = prototype.GetComponent<Renderer>().bounds.size.z * 0.5f;
             a = r * 2 * Mathf.Sqrt(1 / 3.0f);
@@ -32,6 +32,11 @@ namespace Hexocracy.CustomEditor
             var firstHex = CreateHex(new Index2D(0, 0));
             currCC = 1;
             BuildCircle(new List<HexEditor> { firstHex });
+        }
+
+        public Transform GetContainer()
+        {
+            return container;
         }
 
         private void BuildCircle(List<HexEditor> hexes)

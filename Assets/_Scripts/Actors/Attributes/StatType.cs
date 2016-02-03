@@ -7,13 +7,13 @@ namespace Hexocracy
 {
     public enum StatType : byte
     {
-        RedElement = 1,
-        GreenElement = 2,
-        BlueElement = 3,
+        Red = 1,
+        Green = 2,
+        Blue = 3,
 
         HealthPoints = 10,
-        MovePoints = 11,
-        ActionPoints = 12,
-        Damage = 13
+        ActionPoints = 11,
+        Damage = 12,
+        Initiative = 13
     }
 }

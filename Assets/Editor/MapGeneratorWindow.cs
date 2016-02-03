@@ -31,7 +31,9 @@ namespace Hexocracy.CustomEditor
         {
             prototypeHex = (HexEditor)EditorGUILayout.ObjectField("Hex Prototype ", prototypeHex, typeof(HexEditor), true);
 
+            GUI.enabled = false;
             hexContainer = (Transform)EditorGUILayout.ObjectField("Hex Container ", hexContainer, typeof(Transform), true);
+            GUI.enabled = true;
 
             genType = (MapGenType)EditorGUILayout.EnumPopup("Generation Type", genType);
 
@@ -49,9 +51,9 @@ namespace Hexocracy.CustomEditor
             if (GUILayout.Button("DestroyAll"))
                 Destroy();
 
-            if (!hexContainer)
+            if (!prototypeHex)
             {
-                hexContainer = GameObject.Find("HexContainer").transform;
+                prototypeHex = Resources.Load<HexEditor>("Prefabs/Hex");
             }
         }
 
@@ -64,8 +66,9 @@ namespace Hexocracy.CustomEditor
 
         private void Generate()
         {
-            MapFactory factory = new MapFactory(prototypeHex, hexContainer, circleCount);
+            MapFactory factory = new MapFactory(prototypeHex, circleCount);
             factory.Generate();
+            hexContainer = factory.GetContainer();
         }
 
     }

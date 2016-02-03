@@ -13,8 +13,6 @@ namespace Hexocracy
 
         public Index2D[] NeighborsIndexes { get; protected set; }
 
-        
-
         public virtual void SetIndex(Index2D index)
         {
             Index = index;

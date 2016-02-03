@@ -80,6 +80,14 @@ namespace Hexocracy
             return enemies.ContainsKey(player.Index);
         }
 
+        public void SwitchActiveState(bool active)
+        {
+            if (active)
+                InputController.I.ActivatePlayer(this);
+            else
+                InputController.I.DeactivatePlayer(this);
+        }
+
         public bool IsAlly(Player player)
         {
             return player == this || allies.ContainsKey(player.Index);
