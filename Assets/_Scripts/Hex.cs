@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Hexocracy
+namespace Hexocracy.Core
 {
-    public class Hex : AbstractHex
+    public class Hex : AbstractHex //,IPFEdge
     {
         public static implicit operator int(Hex hex)
         {
@@ -76,12 +76,12 @@ namespace Hexocracy
             }
         }
 
-        public void OnContentAppeared(IContainable content)
+        public void OnContentEntered(IContainable content)
         {
             Content = content;
         }
 
-        public void OnContentMissed(IContainable content)
+        public void OnContentLeft(IContainable content)
         {
             if (Content == content)
                 Content = EmptyContent.Get();

@@ -4,18 +4,21 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Hexocracy
+namespace Hexocracy.Core
 {
     public class GameInstance : MonoBehaviour
     {
         private FigureFactory figureFactory;
         private List<Player> players;
+        private Canvas canvas;
 
         private void Awake()
         {
             //Player.Builder.Build(new string[] { "First guy", "Second guy", "Vasia" },
             //    new int[][] { new int[] { 3, 4 }, new int[] { 2, 4 }, new int[] { 2, 3 } },
             //null);
+
+            InitializeMainComponents();
 
             players = Player.Builder.Build(new string[] { "First guy", "Second guy" },
                                            new int[][] { new int[] { 1 }, new int[] { 0 } },
@@ -26,9 +29,14 @@ namespace Hexocracy
             TurnController.Initialize(container);
         }
 
+        private void InitializeMainComponents()
+        {
+            canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Canvas"));
+        }
+
         private void Start()
         {
-            FindObjectsOfType<FigureEditor>().ToList().ForEach(f => f.InitializeForGame());
+            FindObjectsOfType<EditorBehaviour>().ToList().ForEach(f => f.ToGameInstance());
             TurnController.Start();
         }
     }

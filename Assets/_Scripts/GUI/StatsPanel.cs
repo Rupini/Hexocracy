@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Hexocracy.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Hexocracy
+namespace Hexocracy.View
 {
     public class StatsPanel : MonoBehaviour
     {
@@ -28,8 +29,8 @@ namespace Hexocracy
             {
                 transform.position = Camera.main.WorldToScreenPoint(target.t.position + new Vector3(0, 2, 0));
                 text.text = "<color=red>" + target.HP + "/" + target.MaxHP + "</color>\n" +
-                    "<color=olive>" + target.AP + "/" + target.MaxAP + "</color>\n" +
-                    "<color=aqua>" + Mathf.Round(target.Initiative)+ "</color>";
+                    "<color=aqua>" + target.AP + "/" + target.MaxAP + "</color>\n" +
+                    "<color=blue>" + (int)target.Initiative + "</color>";
             }
             else
                 gameObject.SetActive(false);

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Hexocracy.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Hexocracy
+namespace Hexocracy.Core
 {
     public class InputController : MonoBehaviour
     {
@@ -63,7 +64,7 @@ namespace Hexocracy
             //}
 
 
-            if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.Owner == activePlayer)
+            if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.Active && selectedFigure.Owner == activePlayer)
             {
                 var ray = currCamera.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
