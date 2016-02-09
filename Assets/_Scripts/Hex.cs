@@ -12,22 +12,26 @@ namespace Hexocracy.Core
         {
             return hex.GetHashCode();
         }
+        #region Definition
+
+        private GameMap container;
+        private int _findFlag;
+        private List<IHexAddition> additions;
 
         public int H { get; private set; }
 
         public List<Hex> Neighbors { get; protected set; }
-
-        private int findFlag;
+       
         public int FindFlag
         {
             get
             {
-                return findFlag;
+                return _findFlag;
             }
             set
             {
-                findFlag = value;
-                if (findFlag != 0)
+                _findFlag = value;
+                if (_findFlag != 0)
                 {
                     GetComponentInChildren<TextMesh>().text = "";// findFlag.ToString();
                 }
@@ -39,43 +43,43 @@ namespace Hexocracy.Core
         public IContainable Content { get; private set; }
 
         public Vector3 GroundCenter { get; private set; }
-
-
-
-        protected override void Awake()
+        #endregion
+        #region Initialize
+        private Hex()
         {
-            base.Awake();
+            additions = new List<IHexAddition>();
+        }
 
-            var hexEditor = GetComponent<HexEditor>();
+        public void Initialize(GameMap container, HexData data)
+        {
+            this.container = container;
 
-            SetIndex(new Index2D(hexEditor.xIndex, hexEditor.yIndex));
-            H = hexEditor.height;
+            SetIndex(new Index2D(data.xIndex, data.yIndex));
+            H = data.height;
+            t.localScale = new Vector3(t.localScale.x, data.scaleY, t.localScale.z);
 
             GroundCenter = new Vector3(t.position.x, t.position.y + GetComponent<Collider>().bounds.size.y, t.position.z);
 
-            Destroy(hexEditor);
-
+            //*!Crutch
             t.GetChild(0).gameObject.SetActive(true);
+            //_
 
             Content = EmptyContent.Get();
-
-            GameMap.I.Add(this);
         }
 
-
-        private void Start()
+        public void PostInitialize()
         {
             Neighbors = new List<Hex>();
             foreach (var index in NeighborsIndexes)
             {
-                var hex = GameMap.I.Get(index);
+                var hex = container.Get(index);
                 if (hex)
                 {
                     Neighbors.Add(hex);
                 }
             }
         }
-
+        #endregion
         public void OnContentEntered(IContainable content)
         {
             Content = content;
@@ -108,6 +112,18 @@ namespace Hexocracy.Core
         public void PaintNeighbors(Color color)
         {
             Neighbors.ForEach((h) => { h.ChangeColor(color); });
+        }
+
+        private void AddAddition(IHexAddition addition)
+        {
+            additions.Add(addition);
+            addition.Attach(this);
+        }
+
+        private void RemoveAddition(IHexAddition addition)
+        {
+            additions.Remove(addition);
+            addition.Disattach();
         }
 
         public override string ToString()

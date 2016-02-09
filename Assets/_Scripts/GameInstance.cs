@@ -36,7 +36,12 @@ namespace Hexocracy.Core
 
         private void Start()
         {
-            FindObjectsOfType<EditorBehaviour>().ToList().ForEach(f => f.ToGameInstance());
+            var hexes = FindObjectsOfType<HexEditor>().ToList();
+            
+            hexes.ForEach(hex => hex.ToGameInstance());
+            hexes.ForEach(hex => hex.GetComponent<Hex>().PostInitialize());
+
+            FindObjectsOfType<EditorBehaviour>().ToList().ForEach(editorObj => editorObj.ToGameInstance());
             TurnController.Start();
         }
     }

@@ -48,6 +48,7 @@ namespace Hexocracy.Core
         public override void ToGameInstance()
         {
             FigureFactory.I.Create(go, data);
+            GameObject.Destroy(this);
         }
     }
 }

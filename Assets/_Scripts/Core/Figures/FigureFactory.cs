@@ -22,7 +22,6 @@ namespace Hexocracy.Core
         {
             var figure = baseObject.AddComponent<Figure>();
             figure.Initialize(container, data);
-            GameObject.Destroy(baseObject.GetComponent<FigureEditor>());
         }
 
     }

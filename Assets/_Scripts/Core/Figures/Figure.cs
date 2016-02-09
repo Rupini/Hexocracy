@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public class Figure : BouncingObject
+    public class Figure : BouncingObject, IActivableObject
     {
         #region Definition
         protected Stat reds;
@@ -37,9 +37,11 @@ namespace Hexocracy.Core
             base.Initialize(container, data);
             Owner = Player.GetByIndex(data.owner);
 
+            //*!Crutch
             r.material = Resources.Load<Material>("Models/Materials/whiteColor");
             r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
             r.material.color = data.color;
+            //_
 
             InitStats(data);
         }
@@ -165,6 +167,37 @@ namespace Hexocracy.Core
         {
             content.Apply(this);
         }
+        #endregion
+
+        #region Implements
+
+        #region IActivable
+
+        public bool Active { get; protected set; }
+        private Color defaultColor;
+
+        public void Deactivate()
+        {
+            Active = false;
+            Owner.SwitchActiveState(false);
+            if (this)//Cruntch!
+            {
+                r.material.color = defaultColor;
+            }
+        }
+
+        public void Activate()
+        {
+            Active = true;
+            Owner.SwitchActiveState(true);
+            defaultColor = r.material.color;
+            r.material.color = new Color(1, 1, 1);
+        }
+
+        public int EntityID { get { return GetInstanceID(); } }
+
+        #endregion
+
         #endregion
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using Hexocracy.Core;
+
 using UObject = UnityEngine.Object;
 
 namespace Hexocracy.CustomEditor
@@ -12,14 +14,6 @@ namespace Hexocracy.CustomEditor
             Nothing = 0,
             Circle = 1,
             Rectangle = 2
-        }
-
-
-        [MenuItem("HexEditor/Map Generator")]
-        public static void ShowWindow()
-        {
-            EditorWindow.GetWindow<MapGeneratorWindow>("Map Generator");
-            //SceneView.onSceneGUIDelegate += (sv) => { Debug.Log("hello!"); };
         }
 
         private MapGenType genType;

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public abstract class BouncingObject : ActivableObject
+    public abstract class BouncingObject : MapObject
     {
         private FigureContainer container;
 
