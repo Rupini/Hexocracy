@@ -15,6 +15,9 @@ namespace Hexocracy.Core
         public HexData data;
         
         private int lastHeight = 1;
+        private bool lastHasAddition;
+        private Material defaultMaterial;
+        private Material additionMaterial;
 
         public override void SetIndex(Index2D index)
         {
@@ -32,6 +35,7 @@ namespace Hexocracy.Core
         private void Update()
         {
             ChangeHeight();
+            ChangeAdditionStatus();
         }
 
         private void ChangeHeight()
@@ -44,11 +48,28 @@ namespace Hexocracy.Core
             }
         }
 
+        private void ChangeAdditionStatus()
+        {
+            if(data.hasAddition != lastHasAddition)
+            {
+                lastHasAddition = data.hasAddition;
+                if (data.hasAddition)
+                    r.material = additionMaterial;
+                else
+                    r.material = defaultMaterial;
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
             data.scaleY = t.localScale.y;
             data.height = (int) (t.localScale.y / DEFAULT_BASE_SCALE);
+
+            defaultMaterial = Resources.Load<Material>("Models/Materials/hexDefaultMat");
+            additionMaterial = Resources.Load<Material>("Models/Materials/hexAdditionMat");
+
+            lastHasAddition = data.hasAddition;
         }
 
         public void ToGameInstance()

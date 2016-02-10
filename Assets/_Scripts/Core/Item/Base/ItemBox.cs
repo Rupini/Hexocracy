@@ -23,9 +23,21 @@ namespace Hexocracy
         {
             Item = new Element(this, data);
 
-            r.material = Resources.Load<Material>("Models/Materials/whiteColor");
+            r.material = Resources.Load<Material>("Models/Materials/whiteMat");
             r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
-            r.material.color = data.color;
+            
+            switch(data.kind)
+            {
+                case ElementKind.Red:
+                    r.material.color = new Color(1, 0, 0);
+                    break;
+                case ElementKind.Green:
+                    r.material.color = new Color(0, 1, 0);
+                    break;
+                case ElementKind.Blue:
+                    r.material.color = new Color(0, 0, 1);
+                    break;
+            }
 
             DefineStartHex(r.bounds.size.y);
         }

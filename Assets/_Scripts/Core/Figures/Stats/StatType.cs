@@ -10,10 +10,13 @@ namespace Hexocracy
         Red = 1,
         Green = 2,
         Blue = 3,
+        
+        Mass = 5,
 
         HealthPoints = 10,
         ActionPoints = 11,
-        Damage = 12,
-        Initiative = 13
+        MinDamage = 12,
+        MaxDamage = 13,
+        Initiative = 14
     }
 }

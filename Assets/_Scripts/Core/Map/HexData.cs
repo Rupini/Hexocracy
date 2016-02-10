@@ -17,10 +17,13 @@ namespace Hexocracy.Core
         [Range(1, 10)]
         public int height;
 
-        public Item item;
+        public bool hasAddition;
+
+        [Condition("hasAddition","true")]
+        public Addition addition;
 
         [Serializable]
-        public class Item
+        public class Addition
         {
             public ItemType type;
 

@@ -64,7 +64,14 @@ namespace Hexocracy.CustomEditor
 
             if (checkingProperty != null)
             {
-                return checkingProperty.enumNames[checkingProperty.enumValueIndex] == cachedAttribute.fieldValue;
+                switch(checkingProperty.propertyType)
+                {
+                    case SerializedPropertyType.Boolean:
+                        return checkingProperty.boolValue.ToString().ToLower() == cachedAttribute.fieldValue;
+                    case SerializedPropertyType.Enum:
+                        return checkingProperty.enumNames[checkingProperty.enumValueIndex] == cachedAttribute.fieldValue;
+                }
+                
             }
 
             return false;

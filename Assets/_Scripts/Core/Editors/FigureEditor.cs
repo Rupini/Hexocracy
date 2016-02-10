@@ -20,7 +20,7 @@ namespace Hexocracy.Core
             if (!Application.isPlaying)
             {
                 if (r.sharedMaterial == null)
-                    r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteColor"));
+                    r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteMat"));
                 else
                     r.sharedMaterial = new Material(r.sharedMaterial);
             }

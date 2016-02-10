@@ -12,11 +12,13 @@ namespace Hexocracy.Core
         public void Attach(Hex target)
         {
             owner = target;
+            OnAttach(owner);
         }
 
         public void Disattach()
         {
             owner = null;
+            OnDisattach();
         }
 
         protected abstract void OnAttach(Hex target);

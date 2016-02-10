@@ -21,7 +21,7 @@ namespace Hexocracy.Core
         public int H { get; private set; }
 
         public List<Hex> Neighbors { get; protected set; }
-       
+
         public int FindFlag
         {
             get
@@ -62,6 +62,11 @@ namespace Hexocracy.Core
 
             //*!Crutch
             t.GetChild(0).gameObject.SetActive(true);
+            if (data.hasAddition)
+            {
+                t.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/ElementHex");
+                AddAddition(new ItemSpawner(data.addition));
+            }
             //_
 
             Content = EmptyContent.Get();
