@@ -71,7 +71,7 @@ namespace Hexocracy.Core
             hp = (DynamicStat)stat;
             stats.Add(stat.Type, stat);
 
-            stat = new DynamicStat(StatType.ActionPoints, data.actionPoints, new List<Stat>() { blues }, x => x[0] + Mathf.Floor(1.25f * x[1] / (x[1] + 1)));
+            stat = new DynamicStat(StatType.ActionPoints, data.actionPoints, new List<Stat>() { blues }, x => x[0] + Mathf.Floor(2 * x[1] / (x[1] + 5)));
             ap = (DynamicStat)stat;
             stats.Add(stat.Type, stat);
 

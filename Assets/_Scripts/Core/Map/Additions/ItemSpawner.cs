@@ -62,6 +62,8 @@ namespace Hexocracy.Core
 
                 var itemBox = go.AddComponent<ItemBox>();
 
+                GameObject.Destroy(go.GetComponent<BoxCollider>());
+
                 var data = new ItemData();
 
                 data.count = count;
