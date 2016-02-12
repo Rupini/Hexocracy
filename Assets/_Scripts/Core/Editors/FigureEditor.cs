@@ -17,13 +17,12 @@ namespace Hexocracy.Core
 
         private void Start()
         {
-            if (!Application.isPlaying)
+            if (r.sharedMaterial == null)
             {
-                if (r.sharedMaterial == null)
-                    r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteMat"));
-                else
-                    r.sharedMaterial = new Material(r.sharedMaterial);
+                r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteMat"));
             }
+
+            data.color = r.sharedMaterial.color;
         }
 
         private void Update()

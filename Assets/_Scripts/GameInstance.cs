@@ -11,6 +11,7 @@ namespace Hexocracy.Core
         private FigureFactory figureFactory;
         private List<Player> players;
         private Canvas canvas;
+        private Camera mainCamera;
 
         public static Canvas Canvas { get; private set; }
 
@@ -34,6 +35,7 @@ namespace Hexocracy.Core
         private void InitializeMainComponents()
         {
             canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Play/Canvas"));
+            mainCamera = Instantiate(Resources.Load<Camera>("Prefabs/Play/MainCamera"));
 
             Canvas = canvas;
         }
