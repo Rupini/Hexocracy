@@ -28,8 +28,8 @@ namespace Hexocracy.View
             if (target)
             {
                 transform.position = Camera.main.WorldToScreenPoint(target.t.position + new Vector3(0, 2, 0));
-                text.text = "<color=red>" + target.HP + "/" + target.MaxHP + "</color>\n" +
-                    "<color=green>" + target.Damage + "</color>\n" +
+                text.text = "<color=red>" + (int)target.HP + "/" + (int)target.MaxHP + "</color>\n" +
+                    "<color=green>" + target.RDamage + "</color>\n" +
                     "<color=blue>" + target.AP + "/" + target.MaxAP + "</color>";
             }
             else

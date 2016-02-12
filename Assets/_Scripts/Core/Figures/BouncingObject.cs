@@ -204,7 +204,7 @@ namespace Hexocracy.Core
                     }
                     break;
                 case ContentType.Item:
-                    OnGotItem(((ItemBox)currentHex.Content).Item);
+                    OnItemBoxContact(currentHex.Content);
                     LandedOnHex(bounceHeight);
                     break;
             }
@@ -272,7 +272,7 @@ namespace Hexocracy.Core
 
        
 
-        protected abstract void OnGotItem(Item content);
+        protected abstract void OnItemBoxContact(IContainable item);
         #endregion
         #region IContainable
 

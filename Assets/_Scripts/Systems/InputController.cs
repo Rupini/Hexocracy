@@ -62,15 +62,34 @@ namespace Hexocracy.Core
             //        hit.collider.GetComponent<Hex>().PaintNeighbors(Color.green);
             //    }
             //}
+            int createBombFlag = 0;
 
+            if (Input.GetKey(KeyCode.B) && selectedFigure && selectedFigure.Active)
+            {
+                createBombFlag = selectedFigure.bombCurrCD == 0 ? 1 : -1;
+            }
 
             if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.Active && selectedFigure.Owner == activePlayer)
             {
-                var ray = currCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+                if (createBombFlag != -1)
+                {
+                    var ray = currCamera.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, 1000, 1 << 8))
-                    selectedFigure.MoveTo(hit.collider.GetComponent<Hex>(), Input.GetKey(KeyCode.Q));
+                    if (Physics.Raycast(ray, out hit, 1000, 1 << 8))
+                    {
+                        var result = selectedFigure.MoveTo(hit.collider.GetComponent<Hex>(), Input.GetKey(KeyCode.Q));
+                        if (result == MoveResult.Ok && createBombFlag == 1)
+                        {
+                            selectedFigure.CreateBomb();
+                        }
+                    }
+                }
+                else
+                {
+                    Instantiate(Resources.Load<BitchController>("Prefabs/Play/Msg")).Initialize(25, 1, 2, 2, 
+                        "Bomb kaking in CD! Sry Bitch! Wait " + selectedFigure.bombCurrCD + " nah!", Color.red);
+                }
             }
 
         }

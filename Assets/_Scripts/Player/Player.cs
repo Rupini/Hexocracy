@@ -61,13 +61,16 @@ namespace Hexocracy.Core
         }
 
         #endregion
-        public int Index { get; private set; }
-
-        public string Name { get; private set; }
 
         private Dictionary<int, Player> enemies = new Dictionary<int, Player>();
 
         private Dictionary<int, Player> allies = new Dictionary<int, Player>();
+
+        public int Index { get; private set; }
+
+        public string Name { get; private set; }
+
+        public Color TeamColor { get; private set; }
 
         private Player(string name, int index)
         {

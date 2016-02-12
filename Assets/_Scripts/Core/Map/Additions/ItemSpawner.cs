@@ -10,6 +10,7 @@ namespace Hexocracy.Core
     public class ItemSpawner : HexAddition
     {
         private int count;
+        private ItemType itemType;
         private ElementKind kind;
         private int minRespTime;
         private int maxRespTime;
@@ -23,6 +24,7 @@ namespace Hexocracy.Core
         {
             count = data.count;
             kind = data.kind;
+            itemType = data.type;
             minRespTime = data.minRespawnTime;
             maxRespTime = data.maxRespawnTime;
             firstSpawn = data.respawnOnStart;
@@ -53,27 +55,24 @@ namespace Hexocracy.Core
         {
             if (owner.Content.Type == ContentType.Empty)
             {
-                var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                //var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                //go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
-                var position = owner.GroundCenter;
-                position.y += 2;
-                go.transform.position = position;
+                //var position = owner.GroundCenter;
+                //position.y += 2;
+                //go.transform.position = position;
 
-                var itemBox = go.AddComponent<ItemBox>();
+                //var itemBox = go.AddComponent<ItemBox>();
 
-                GameObject.Destroy(go.GetComponent<BoxCollider>());
+                //GameObject.Destroy(go.GetComponent<BoxCollider>());
 
                 var data = new ItemData();
-
                 data.count = count;
+                data.type = itemType;
+                data.kind = kind;
 
-                if (kind == ElementKind.Random || kind == ElementKind.None)
-                    data.kind = (ElementKind)URandom.Range(1, 4);
-                else
-                    data.kind = kind;
-
-                itemBox.Initialize(data);
+                ItemFactory.I.Create(data, owner);
+                //itemBox.Initialize(data);
             }
         }
 

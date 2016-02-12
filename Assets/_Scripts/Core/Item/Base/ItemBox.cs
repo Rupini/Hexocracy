@@ -11,7 +11,10 @@ namespace Hexocracy
     {
         public override ContentType Type { get { return ContentType.Item; } }
 
-        public Item Item { get; private set; }
+        public Item Item { get; protected set; }
+
+        protected int lifeTime;
+        protected bool hasLifeTime;
 
         private ItemBox()
         {
@@ -19,29 +22,47 @@ namespace Hexocracy
             Owner = Player.NeutralPassive;
         }
 
-        public void Initialize(ItemData data)
+        public void Initialize(Player owner, ItemData data)
         {
-            Item = new Element(this, data);
+            Owner = owner;
+
+            if (data.type == ItemType.Element)
+                Item = new Element(this, data);
+            else
+                Item = new BombItem(this, (BombData)data);
+
+            lifeTime = data.lifeTime;
+            hasLifeTime = 0 != lifeTime;
 
             r.material = Resources.Load<Material>("Models/Materials/whiteMat");
             r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
-            
-            switch(data.kind)
-            {
-                case ElementKind.Red:
-                    r.material.color = new Color(1, 0, 0);
-                    break;
-                case ElementKind.Green:
-                    r.material.color = new Color(0, 1, 0);
-                    break;
-                case ElementKind.Blue:
-                    r.material.color = new Color(0, 0, 1);
-                    break;
-            }
 
-            DefineStartHex(r.bounds.size.y);
+            r.material.color = data.color;
+
+            var yOffset = data.yOffsetK == ItemData.OFFSET_DEFAULT_FLAG ? r.bounds.size.y : r.bounds.size.y * data.yOffsetK;
+
+            DefineStartHex(yOffset);
         }
 
-       
+        public virtual void Contact(Figure figure)
+        {
+            Item.Contact(figure);
+        }
+
+        protected override void OnTurnFinished(bool roundFinished)
+        {
+            if (roundFinished)
+            {
+                if (hasLifeTime)
+                {
+                    lifeTime--;
+                    if (lifeTime == 0)
+                    {
+                        Destroy();
+                    }
+                }
+            }
+        }
+
     }
 }

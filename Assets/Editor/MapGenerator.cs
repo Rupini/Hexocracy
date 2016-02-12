@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.CustomEditor
 {
-    public class MapFactory
+    public class MapGenerator
     {
         protected HexEditor prototype;
         protected Transform container;
@@ -18,7 +18,7 @@ namespace Hexocracy.CustomEditor
         private int currCC;
         private Dictionary<int, HexEditor> hexMap;
 
-        public MapFactory(HexEditor prototype, int circleCount)
+        public MapGenerator(HexEditor prototype, int circleCount)
         {
             this.prototype = prototype;
             this.container = new GameObject("Hex Container").transform;

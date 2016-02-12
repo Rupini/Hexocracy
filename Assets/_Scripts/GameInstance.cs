@@ -12,6 +12,8 @@ namespace Hexocracy.Core
         private List<Player> players;
         private Canvas canvas;
 
+        public static Canvas Canvas { get; private set; }
+
         private void Awake()
         {
             //Player.Builder.Build(new string[] { "First guy", "Second guy", "Vasia" },
@@ -31,7 +33,9 @@ namespace Hexocracy.Core
 
         private void InitializeMainComponents()
         {
-            canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Canvas"));
+            canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Play/Canvas"));
+
+            Canvas = canvas;
         }
 
         private void Start()

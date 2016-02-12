@@ -11,14 +11,16 @@ namespace Hexocracy.Core
 
         public abstract ItemType Type { get; }
 
-        public virtual void Apply(Figure figure)
-        {
-            box.Destroy();
-        }
-        
-        public Item(ItemBox box)
+        protected Item(ItemBox box)
         {
             this.box = box;
+        }
+
+        protected abstract bool OnContact(Figure figure);
+
+        public void Contact(Figure figure)
+        {
+            if (OnContact(figure)) box.Destroy();
         }
     }
 }

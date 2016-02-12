@@ -30,7 +30,7 @@ namespace Hexocracy.Core
             Destroy(go);
         }
         #endregion
-
+       
         protected override void Awake()
         {
             base.Awake();
@@ -40,7 +40,7 @@ namespace Hexocracy.Core
 
         protected virtual void OnTurnStarted(bool newRound) { }
 
-        protected virtual void OnTurnFinished() { }
+        protected virtual void OnTurnFinished(bool roundFinished) { }
 
         protected void DefineStartHex(float groundCenterYOffset)
         {

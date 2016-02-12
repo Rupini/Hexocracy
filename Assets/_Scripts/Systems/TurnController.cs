@@ -10,7 +10,7 @@ namespace Hexocracy.Core
     {
         #region Static
         public static event Action<bool> TurnStarted = delegate { };
-        public static event Action TurnFinished = delegate { };
+        public static event Action<bool> TurnFinished = delegate { };
         private static TurnController instance;
 
         public static void Initialize(FigureContainer container)
@@ -25,8 +25,9 @@ namespace Hexocracy.Core
 
         public static void OnPlayerFinishedTurn()
         {
-            TurnFinished();
-            instance.EndTurn();
+            var roundFinished = instance.currentFigureIndex == instance.figures.Count;
+            TurnFinished(roundFinished);
+            instance.EndTurn(roundFinished);
         }
         #endregion
 
@@ -82,17 +83,17 @@ namespace Hexocracy.Core
 
             if (pickedFigure == null)
             {
-                TurnFinished();
+                TurnFinished(true);
                 Next(true);
             }
             else
                 pickedFigure.Activate();
         }
 
-        private void EndTurn()
+        private void EndTurn(bool roundFinished)
         {
             pickedFigure.Deactivate();
-            Next(currentFigureIndex == figures.Count);
+            Next(roundFinished);
         }
     }
 }

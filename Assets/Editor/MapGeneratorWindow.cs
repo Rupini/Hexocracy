@@ -39,28 +39,33 @@ namespace Hexocracy.CustomEditor
             }
 
 
-            if (GUILayout.Button("Generate"))
-                Generate();
+            if (GUILayout.Button("Generate")) Generate();
 
-            if (GUILayout.Button("DestroyAll"))
-                Destroy();
+            if (GUILayout.Button("DestroyAll")) Destroy();
 
             if (!prototypeHex)
             {
-                prototypeHex = Resources.Load<HexEditor>("Prefabs/Hex");
+                prototypeHex = Resources.Load<HexEditor>("Prefabs/Editor/Hex");
+            }
+
+            if (!hexContainer)
+            {
+                var go = GameObject.Find("Hex Container");
+                if (go)
+                {
+                    hexContainer = go.transform;
+                }
             }
         }
 
         private void Destroy()
         {
-            if (hexContainer)
-                while (hexContainer.childCount > 0)
-                    DestroyImmediate(hexContainer.GetChild(0).gameObject);
+            if (hexContainer) DestroyImmediate(hexContainer.gameObject);
         }
 
         private void Generate()
         {
-            MapFactory factory = new MapFactory(prototypeHex, circleCount);
+            var factory = new MapGenerator(prototypeHex, circleCount);
             factory.Generate();
             hexContainer = factory.GetContainer();
         }

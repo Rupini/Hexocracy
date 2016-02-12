@@ -20,10 +20,10 @@ namespace Hexocracy.Core
             Count = data.count;
         }
 
-        public override void Apply(Figure figure)
+        protected override bool OnContact(Figure figure)
         {
-            base.Apply(figure);
             figure.AddElement(this);
+            return true;
         }
     }
 }

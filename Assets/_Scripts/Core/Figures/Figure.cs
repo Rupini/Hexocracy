@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    public class Figure : BouncingObject, IActivableObject
+    public class Figure : BouncingObject, IActivableObject, IAttacker
     {
         #region Definition
         protected Stat reds;
@@ -21,7 +22,9 @@ namespace Hexocracy.Core
         protected Stat maxDamage;
         protected Stat initiative;
 
-        public Range Damage { get; protected set; }
+        public Range RDamage { get; private set; }
+
+        public float Damage { get { return RDamage; } }
 
         protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
         #endregion
@@ -89,7 +92,7 @@ namespace Hexocracy.Core
             initiative = stat;
             stats.Add(stat.Type, stat);
 
-            Damage = new Range(() => minDamage.Value, () => maxDamage);
+            RDamage = new Range(() => minDamage.Value, () => maxDamage);
         }
 
         #endregion
@@ -133,11 +136,30 @@ namespace Hexocracy.Core
         #endregion
         #region Fighting
 
-        public void OnAttack(Figure attacker, float dmg)
+        public void OnAttack(IAttacker attacker, float dmg)
         {
             hp.CurrValue -= dmg;
             if (hp.CurrValue <= 0)
                 Destroy();
+        }
+
+        private int bombCD = 3;
+        public int bombCurrCD = 0;
+
+        public void CreateBomb()
+        {
+            if (bombCurrCD == 0)
+            {
+                bombCurrCD = bombCD;
+
+                var bomb = new BombData();
+                bomb.damage = URandom.Range(3f, 4f) * mass;
+                bomb.type = ItemType.Other;
+                bomb.lifeTime = 5;
+                bomb.yOffsetK = 0;
+
+                ItemFactory.I.Create(bomb, currentHex, Owner);
+            }
         }
 
         #endregion
@@ -167,11 +189,11 @@ namespace Hexocracy.Core
             if (newRound)
             {
                 ap.CurrValue = ap.Value;
+                if (bombCurrCD != 0)
+                {
+                    bombCurrCD--;
+                }
             }
-        }
-
-        protected override void OnTurnFinished()
-        {
         }
 
         protected override void OnForcedMovePenalti()
@@ -179,9 +201,9 @@ namespace Hexocracy.Core
             OnAttack(this, -Damage * ap.CurrValue);
         }
 
-        protected override void OnGotItem(Item content)
+        protected override void OnItemBoxContact(IContainable item)
         {
-            content.Apply(this);
+            ((ItemBox)item).Contact(this);
         }
         #endregion
 

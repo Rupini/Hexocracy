@@ -53,7 +53,7 @@ namespace Hexocracy.Core
 
         public override void ToGameInstance()
         {
-            go.AddComponent<ItemBox>().Initialize(data);
+            go.AddComponent<ItemBox>().Initialize(Player.NeutralPassive, data);
             Destroy(this); 
         }
     }
