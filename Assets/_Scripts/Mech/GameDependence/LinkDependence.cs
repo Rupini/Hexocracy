@@ -5,37 +5,7 @@ using System.Text;
 
 namespace Hexocracy.Mech
 {
-    #region GameDesign
-
-    public class StatDependence : LinkDependece<StatType, Stat>
-    {
-        public class Provider : AbstractProvider
-        {
-            public Provider(Dictionary<StatType, Stat> container)
-                : base(container)
-            {
-
-            }
-
-            protected override void InitializeDependencies()
-            {
-                foreach (var item in StatDependence_GD.Data)
-                {
-                    var dependence = new StatDependence(container, item.CalculationFunction, item.Links);
-                    dependencies[item.Type] = dependence;
-                }
-            }
-        }
-
-        protected StatDependence(Dictionary<StatType, Stat> container, Func<List<float>, float> calculationFuncion, params StatType[] links)
-            : base(container, calculationFuncion, links)
-        {
-        }
-    }
-
-    #endregion
-    #region Logic
-    public class LinkDependece<TLink, T> : GameDependence<T>
+    public class LinkDependece<TLink, T> : AbstractDependence<T>
     {
 
         public abstract class AbstractProvider
@@ -69,5 +39,4 @@ namespace Hexocracy.Mech
             }
         }
     }
-    #endregion
 }

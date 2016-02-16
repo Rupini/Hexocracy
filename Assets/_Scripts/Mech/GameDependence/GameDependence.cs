@@ -5,15 +5,17 @@ using System.Text;
 
 namespace Hexocracy.Mech
 {
-    public abstract class GameDependence<T>
+    public class GameDependence<T> : AbstractDependence<T>
     {
-        protected List<T> arguments;
-
-        public Func<List<float>, float> CalculationFunction { get; protected set; }
-
-        public List<T> GetArguments()
+        public GameDependence(List<T> arguments)
         {
-            return arguments;
+            this.arguments = arguments;
         }
+
+        public float Calculate(params float[] contextArguments)
+        {
+            return 0;
+        }
+
     }
 }

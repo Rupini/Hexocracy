@@ -157,8 +157,9 @@ namespace Hexocracy.Core
             if (figure.Owner.IsAlly(Owner))
             {
                 if (forced && ap.CurrValue <= 0)
+                {
                     figure.OnAttack(this, (Damage - bounceHeight * 2) * (-ap.CurrValue * 0.5f));
-
+                }
             }
             else
                 figure.OnAttack(this, Damage - bounceHeight * 2);
@@ -172,6 +173,11 @@ namespace Hexocracy.Core
             }
         }
 
+        protected override void OnForcedMovePenalti()
+        {
+            OnAttack(this, -Damage * ap.CurrValue);
+        }
+
         protected override void OnTurnStarted(bool newRound)
         {
             if (newRound)
@@ -182,11 +188,6 @@ namespace Hexocracy.Core
                     bombCurrCD--;
                 }
             }
-        }
-
-        protected override void OnForcedMovePenalti()
-        {
-            OnAttack(this, -Damage * ap.CurrValue);
         }
 
         protected override void OnItemBoxContact(IContainable item)
