@@ -58,7 +58,7 @@ namespace Hexocracy.Core
         {
             if (inFlight) return MoveResult.AlreadyInFlight;
             if (AP <= 0) return MoveResult.NotEnoughActionPoints;
-            if (Owner == hex.Content.Owner) return MoveResult.BadDestination;
+            if (hex.HasFigure && Owner == hex.Content.Owner) return MoveResult.BadDestination;
 
             this.forced = forced;
             currPath = GetPath(hex);

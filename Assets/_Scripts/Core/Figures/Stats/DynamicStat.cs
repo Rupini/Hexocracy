@@ -26,13 +26,13 @@ namespace Hexocracy
             }
         }
 
-        public DynamicStat(StatType type, float baseValue, List<Stat> components = null, Func<List<float>, float> dependence = null)
-            : this(type, baseValue, baseValue, components, dependence)
+        public DynamicStat(StatType type, float baseValue)
+            : this(type, baseValue, baseValue)
         {
         }
 
-        public DynamicStat(StatType type, float baseValue, float currValue, List<Stat> components = null, Func<List<float>, float> dependence = null)
-            : base(type, baseValue, components, dependence)
+        public DynamicStat(StatType type, float baseValue, float currValue)
+            : base(type, baseValue)
         {
             _currValue = currValue;
         }

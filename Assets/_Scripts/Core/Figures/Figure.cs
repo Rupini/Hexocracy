@@ -1,4 +1,5 @@
 ﻿using Hexocracy.HelpTools;
+using Hexocracy.Mech;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Hexocracy.Core
     public class Figure : BouncingObject, IActivableObject, IAttacker
     {
         #region Definition
+        protected StatsHolder statHolder;
+        
         protected Stat reds;
         protected Stat blues;
         protected Stat greens;
@@ -26,7 +29,6 @@ namespace Hexocracy.Core
 
         public float Damage { get { return RDamage; } }
 
-        protected Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
         #endregion
         #region Properties
 
@@ -34,6 +36,11 @@ namespace Hexocracy.Core
 
         #endregion
         #region Initialize
+        protected Figure()
+        {
+            statHolder = new StatsHolder();
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -54,49 +61,30 @@ namespace Hexocracy.Core
             InitStats(data);
         }
 
+       
+        #endregion
+        #region Stats
+
         protected virtual void InitStats(FigureData data)
         {
-            Stat stat;
+            reds = statHolder.Add(StatType.Red, 0, false);
+            greens = statHolder.Add(StatType.Green, 0, false);
+            blues = statHolder.Add(StatType.Blue, 0, false);
 
-            reds = new Stat(StatType.Red, 0);
-            stats.Add(reds.Type, reds);
+            mass = statHolder.Add(StatType.Mass, 0, false);
 
-            greens = new Stat(StatType.Green, 0);
-            stats.Add(greens.Type, greens);
+            hp = (DynamicStat)statHolder.Add(StatType.HealthPoints, data.baseHP, true);
+            ap = (DynamicStat)statHolder.Add(StatType.ActionPoints, data.actionPoints, true); ;
 
-            blues = new Stat(StatType.Blue, 0);
-            stats.Add(blues.Type, blues);
+            maxDamage = statHolder.Add(StatType.MaxDamage, data.damage, false);
+            minDamage = statHolder.Add(StatType.MinDamage, 0, false);
 
-            mass = new Stat(StatType.Mass, 10, new List<Stat>() { reds, greens, blues }, x => x[0] + x[1] + x[2] + x[3]);
-            stats.Add(mass.Type, mass);
+            initiative = statHolder.Add(StatType.Initiative, data.initiative, false);
 
-            stat = new DynamicStat(StatType.HealthPoints, data.baseHP, new List<Stat>() { reds }, x => x[0] + x[1] * 2);
-            hp = (DynamicStat)stat;
-            stats.Add(stat.Type, stat);
-
-            stat = new DynamicStat(StatType.ActionPoints, data.actionPoints, new List<Stat>() { blues }, x => x[0] + Mathf.Floor(2 * x[1] / (x[1] + 5)));
-            ap = (DynamicStat)stat;
-            stats.Add(stat.Type, stat);
-
-            stat = new Stat(StatType.MaxDamage, data.damage, new List<Stat>() { greens }, x => x[0] + x[1]);
-            maxDamage = stat;
-            stats.Add(stat.Type, stat);
-
-            stat = new Stat(StatType.MinDamage, 0, new List<Stat>() { maxDamage, mass, greens },
-                x => x[1] - x[1] * (0.5f - x[2] / (10 * x[3] + 100))
-                );
-            minDamage = stat;
-            stats.Add(stat.Type, stat);
-
-            stat = new Stat(StatType.Initiative, data.initiative);//, new List<Stat>() { blues }, x => x[0] + (x[1] * 10f) / (1 + x[1] + x[0]));
-            initiative = stat;
-            stats.Add(stat.Type, stat);
+            statHolder.InitializeDependencies();
 
             RDamage = new Range(() => minDamage.Value, () => maxDamage);
         }
-
-        #endregion
-        #region Stats
 
         public float MaxHP { get { return hp; } }
 
@@ -130,7 +118,7 @@ namespace Hexocracy.Core
 
         public void AddElement(Element element)
         {
-            stats[(StatType)element.Kind].BaseValue += element.Count;
+            statHolder[(StatType)element.Kind].BaseValue += element.Count;
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.Mech;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,10 +29,14 @@ namespace Hexocracy
 
         public float Value { get; protected set; }
 
-        public Stat(StatType type, float baseValue, List<Stat> components = null, Func<List<float>, float> dependence = null)
+        public Stat(StatType type, float baseValue)
         {
             Type = type;
             _baseValue = baseValue;
+        }
+
+        public void SetDependence(List<Stat> components, Func<List<float>, float> dependence)
+        {
             if (components != null)
             {
                 this.components = components;
@@ -51,12 +56,12 @@ namespace Hexocracy
             var args = new List<float>() { BaseValue };
             components.ForEach(c => args.Add(c.Value));
             Value = dependence(args);
+            ValueChanged(Value);
         }
 
         protected virtual void OnValueChanged(float changedValue)
         {
             Calculate();
-            ValueChanged(Value);
         }
 
         public float BaseValue
