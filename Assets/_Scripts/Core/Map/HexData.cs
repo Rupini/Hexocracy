@@ -19,7 +19,7 @@ namespace Hexocracy.Core
 
         public bool hasAddition;
 
-        [Condition("hasAddition","true")]
+        [Condition(true, "hasAddition", "true")]
         public Addition addition;
 
         [Serializable]
@@ -27,7 +27,7 @@ namespace Hexocracy.Core
         {
             public ItemType type;
 
-            [Condition("type", "Element")]
+            [Condition(true, "type", "Element")]
             public ElementKind kind;
 
             public int count;

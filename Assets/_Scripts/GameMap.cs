@@ -18,6 +18,11 @@ namespace Hexocracy.Core
             }
         }
 
+        public List<Hex> GetAll()
+        {
+            return hexes.Values.ToList();
+        }
+
         public void ResetFlags(int undefinedValue)
         {
             foreach (var pair in hexes)

@@ -8,5 +8,9 @@ namespace Hexocracy
     [Serializable]
     public class ElementData : ItemData
     {
+        public ElementKind kind;
+
+        public override ItemType type { get { return ItemType.Element; } }
+       
     }
 }

@@ -8,21 +8,20 @@ using UnityEngine;
 namespace Hexocracy
 {
     [Serializable]
-    public class ItemData
+    public abstract class ItemData
     {
-        public const int OFFSET_DEFAULT_FLAG = -1000;
+        public abstract ItemType type { get; }
 
-        public ItemType type;
-        public ElementKind kind;
-        public int count;
+        public int capacity;
 
-        [HideInInspector]
         public int lifeTime;
 
-        [HideInInspector]
-        public float yOffsetK = OFFSET_DEFAULT_FLAG;
+        public bool overrideOffsetK;
 
-        [ReadOnly]
+        [Condition(true, "overrideOffsetK", "true")]
+        public float yOffsetK = 0;
+
+        [HideInInspector]
         public Color color;
     }
 }

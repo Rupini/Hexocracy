@@ -13,11 +13,11 @@ namespace Hexocracy.Core
 
         public int Count { get; private set; }
 
-        public Element(ItemBox box, ItemData data)
+        public Element(ItemBox box, ElementData data)
             : base(box)
         {
             Kind = data.kind;
-            Count = data.count;
+            Count = data.capacity;
         }
 
         protected override bool OnContact(Figure figure)

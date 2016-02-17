@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [ExecuteInEditMode]
     public abstract class EditorBehaviour : CachedMonoBehaviour, IEditorBehaviour
     {
         public abstract void ToGameInstance();

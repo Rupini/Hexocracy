@@ -8,7 +8,6 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    [ExecuteInEditMode]
     public class FigureEditor : EditorBehaviour
     {
         public FigureData data;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public abstract class MapObject : CachedMonoBehaviour, IContainable
+    public abstract class MapObject : TurnListenerBehaviour, IContainable
     {
         protected Hex currentHex;
 
@@ -27,20 +27,12 @@ namespace Hexocracy.Core
             LeaveHex();
 
             Destroyed = true;
+            OnDestroy();
             Destroy(go);
         }
+
+        public event Action OnDestroy = delegate { };
         #endregion
-       
-        protected override void Awake()
-        {
-            base.Awake();
-            TurnController.TurnStarted += OnTurnStarted;
-            TurnController.TurnFinished += OnTurnFinished;
-        }
-
-        protected virtual void OnTurnStarted(bool newRound) { }
-
-        protected virtual void OnTurnFinished(bool roundFinished) { }
 
         protected void DefineStartHex(float groundCenterYOffset)
         {

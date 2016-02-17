@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.CustomEditor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [ExecuteInEditMode]
     public class ItemBoxEditor : EditorBehaviour
     {
-        public ItemData data;
+        public ItemType type;
+        
+        [Condition(true,"type","Element")]
+        public ElementData data;
 
         private ElementKind previusKind;
 

@@ -66,9 +66,8 @@ namespace Hexocracy.Core
 
                 //GameObject.Destroy(go.GetComponent<BoxCollider>());
 
-                var data = new ItemData();
-                data.count = count;
-                data.type = itemType;
+                var data = new ElementData();
+                data.capacity = count;
                 data.kind = kind;
 
                 ItemFactory.I.Create(data, owner);

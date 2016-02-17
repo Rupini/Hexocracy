@@ -12,7 +12,9 @@ namespace Hexocracy.Core
         public static EmptyContent Get()
         {
             if (instance == null)
+            {
                 instance = new EmptyContent();
+            }
 
             return instance;
         }
@@ -27,7 +29,8 @@ namespace Hexocracy.Core
 
         public ContentType Type { get { return ContentType.Empty; } }
 
-        public void Destroy() { }
+        public void Destroy() { OnDestroy(); }
 
+        public event Action OnDestroy = delegate { };
     }
 }

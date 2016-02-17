@@ -33,14 +33,15 @@ namespace Hexocracy.Core
 
             if (data.type == ItemType.Element)
             {
+                var elementData = (ElementData)data;
                 itemBox = GameObject.Instantiate(Resources.Load<ItemBox>("Prefabs/Play/Element"));
 
-                if (data.kind == ElementKind.Random || data.kind == ElementKind.None)
+                if (elementData.kind == ElementKind.Random || elementData.kind == ElementKind.None)
                 {
-                    data.kind = (ElementKind)URandom.Range(1, 4);
+                    elementData.kind = (ElementKind)URandom.Range(1, 4);
                 }
 
-                switch (data.kind)
+                switch (elementData.kind)
                 {
                     case ElementKind.Red:
                         data.color = new Color(1, 0, 0);

@@ -142,8 +142,8 @@ namespace Hexocracy.Core
 
                 var bomb = new BombData();
                 bomb.damage = URandom.Range(3f, 4f) * mass;
-                bomb.type = ItemType.Other;
                 bomb.lifeTime = 5;
+                bomb.overrideOffsetK = true;
                 bomb.yOffsetK = 0;
 
                 ItemFactory.I.Create(bomb, currentHex, Owner);

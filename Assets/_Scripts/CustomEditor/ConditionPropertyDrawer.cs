@@ -14,9 +14,11 @@ namespace Hexocracy.CustomEditor
     {
         public string fieldName { get; private set; }
         public string fieldValue { get; private set; }
+        public bool hiden { get; private set; }
 
-        public ConditionAttribute(string fieldName, string fieldValue)
+        public ConditionAttribute(bool hiden, string fieldName, string fieldValue)
         {
+            this.hiden = hiden;
             this.fieldName = fieldName;
             this.fieldValue = fieldValue;
         }
@@ -64,14 +66,14 @@ namespace Hexocracy.CustomEditor
 
             if (checkingProperty != null)
             {
-                switch(checkingProperty.propertyType)
+                switch (checkingProperty.propertyType)
                 {
                     case SerializedPropertyType.Boolean:
                         return checkingProperty.boolValue.ToString().ToLower() == cachedAttribute.fieldValue;
                     case SerializedPropertyType.Enum:
                         return checkingProperty.enumNames[checkingProperty.enumValueIndex] == cachedAttribute.fieldValue;
                 }
-                
+
             }
 
             return false;
@@ -80,17 +82,24 @@ namespace Hexocracy.CustomEditor
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
 
-            if (CheckCondition(property))
+            if (CheckCondition(property) || !cachedAttribute.hiden)
+            {
                 return EditorGUI.GetPropertyHeight(property, label, true);
+            }
             else
+            {
                 return 0;
+            }
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            if (CheckCondition(property))
+            var checkResult = CheckCondition(property);
+            if (checkResult || !cachedAttribute.hiden)
             {
+                if (!checkResult) GUI.enabled = false;
                 EditorGUI.PropertyField(position, property, label, true);
+                if (!checkResult) GUI.enabled = true;
             }
         }
     }

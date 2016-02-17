@@ -16,5 +16,7 @@ namespace Hexocracy.Core
         bool Destroyed { get; }
 
         void Destroy();
+
+        event Action OnDestroy;
     }
 }

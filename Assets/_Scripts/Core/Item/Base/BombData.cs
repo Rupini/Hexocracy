@@ -9,5 +9,7 @@ namespace Hexocracy
     public class BombData : ItemData
     {
         public float damage;
+
+        public override ItemType type { get { return ItemType.Other; } }
     }
 }
