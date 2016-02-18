@@ -63,7 +63,11 @@ namespace Hexocracy.Core
                 {
                     awaitingCount = awaitingCount - preparedCount;
 
-                    var availableHexes = map.GetAll().FindAll(FindCondition);
+                    List<Hex> availableHexes;
+                    if (unlimitDistanceFromCenter)
+                        availableHexes = map.GetAll().FindAll(hex => hex.Content.Type == ContentType.Empty);
+                    else
+                        availableHexes = map.GetHexInArea(0, 0, limitDistanceFromCenter).FindAll(hex => hex.Content.Type == ContentType.Empty);
 
                     if (availableHexes.Count > 0)
                     {
@@ -107,12 +111,6 @@ namespace Hexocracy.Core
                 }
             }
             return spawnedCount;
-        }
-
-        private bool FindCondition(Hex hex)
-        {
-            return hex.Content.Type == ContentType.Empty &&
-                (unlimitDistanceFromCenter || (Mathf.Abs(hex.Index.X) + Mathf.Abs(hex.Index.Y * 0.5f)) <= limitDistanceFromCenter);
         }
 
         private void OnItemDestroy()
