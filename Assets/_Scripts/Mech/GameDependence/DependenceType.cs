@@ -5,7 +5,9 @@ using System.Text;
 
 namespace Hexocracy.Mech
 {
-    public class ReflectionLink<T>
+    public enum DependenceType : byte
     {
+        Stat = 0,
+        Damage = 1
     }
 }

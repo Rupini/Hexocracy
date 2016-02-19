@@ -7,13 +7,14 @@ namespace Hexocracy.Mech
 {
     public abstract class AbstractDependence<T>
     {
-        protected List<T> arguments;
+        protected List<T> argumentsOfType;
+        protected List<object> allArguments;
 
         public Func<List<float>, float> CalculationFunction { get; protected set; }
 
-        public List<T> GetArguments()
+        public List<T> GetArgumentsOfType()
         {
-            return arguments;
+            return argumentsOfType;
         }
     }
 }

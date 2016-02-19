@@ -7,26 +7,13 @@ namespace Hexocracy.Mech
 {
     public class StatDependence : LinkDependece<StatType, Stat>
     {
-        public class Provider : AbstractProvider
+        public StatDependence(object mainObject, Dictionary<StatType, Stat> container, Func<List<float>, float> calculationFuncion, params object[] links)
+            : base(mainObject, container, calculationFuncion, links)
         {
-            public Provider(Dictionary<StatType, Stat> container)
-                : base(container)
-            {
-
-            }
-
-            protected override void InitializeDependencies()
-            {
-                foreach (var item in StatDependenceData.Data)
-                {
-                    var dependence = new StatDependence(container, item.CalculationFunction, item.Links);
-                    dependencies[item.Type] = dependence;
-                }
-            }
+            converter = (stat) => stat.Value;
         }
-
-        protected StatDependence(Dictionary<StatType, Stat> container, Func<List<float>, float> calculationFuncion, params StatType[] links)
-            : base(container, calculationFuncion, links)
+        public StatDependence(Dictionary<StatType, Stat> container, Func<List<float>, float> calculationFuncion, params object[] links)
+            : this(null, container, calculationFuncion, links)
         {
         }
     }

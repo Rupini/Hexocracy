@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 445134}
   - 114: {fileID: 11409054}
   m_Layer: 0
-  m_Name: ItemSpawner
+  m_Name: GlobalItemSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,42 +41,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     agents:
-    - minCountPerTurn: 1
-      maxCountPerTurn: 3
-      limitCount: 0
-      limitDistanceFromCenter: 0
-      itemType: 1
-      element:
-        capacity: 1
-        lifeTime: 0
-        overrideOffsetK: 0
-        yOffsetK: -1000
-        color: {r: 0, g: 0, b: 0, a: 0}
-        kind: 1
-    - minCountPerTurn: 1
-      maxCountPerTurn: 3
-      limitCount: 0
-      limitDistanceFromCenter: 0
-      itemType: 1
-      element:
-        capacity: 1
-        lifeTime: 0
-        overrideOffsetK: 0
-        yOffsetK: -1000
-        color: {r: 0, g: 0, b: 0, a: 0}
-        kind: 2
     - minCountPerTurn: .200000003
-      maxCountPerTurn: .300000012
+      maxCountPerTurn: .400000006
       limitCount: 1
-      limitDistanceFromCenter: 3
+      limitDistanceFromCenter: 1
       itemType: 1
       element:
         capacity: 1
         lifeTime: 0
         overrideOffsetK: 0
-        yOffsetK: -1000
+        yOffsetK: 0
         color: {r: 0, g: 0, b: 0, a: 0}
         kind: 3
+    - minCountPerTurn: 3
+      maxCountPerTurn: 5
+      limitCount: 20
+      limitDistanceFromCenter: 2
+      itemType: 1
+      element:
+        capacity: 1
+        lifeTime: 0
+        overrideOffsetK: 0
+        yOffsetK: 0
+        color: {r: 0, g: 0, b: 0, a: 0}
+        kind: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

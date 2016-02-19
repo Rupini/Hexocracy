@@ -22,7 +22,7 @@ namespace Hexocracy.Core
         private int currentCountOnMap;
 
         private float awaitingCount;
-        private float lastAwaitingCount;
+        private float spawnCancelAwaitingCount;
 
         private bool unlimitDistanceFromCenter;
         private int limitDistanceFromCenter;
@@ -45,7 +45,7 @@ namespace Hexocracy.Core
 
         public void Spawning()
         {
-            lastAwaitingCount = awaitingCount;
+            spawnCancelAwaitingCount = 0;// awaitingCount;
             awaitingCount += Mathf.Round(URandom.Range(minCountPerTurn, maxCountPerTurn) * 10) / 10;
 
             float permittedAwaitingCount;
@@ -74,14 +74,14 @@ namespace Hexocracy.Core
                         var spawnedCount = Spawn(preparedCount, availableHexes);
                         currentCountOnMap += spawnedCount;
 
-                        //if (awaitingCount > spawnedCount)
-                        //{
-                        //    awaitingCount = lastAwaitingCount;
-                        //}
+                        if (awaitingCount > spawnedCount)
+                        {
+                            awaitingCount = spawnCancelAwaitingCount;
+                        }
                     }
                     else
                     {
-                        awaitingCount = lastAwaitingCount;
+                        awaitingCount = spawnCancelAwaitingCount;
                     }
                 }
             }
@@ -89,7 +89,7 @@ namespace Hexocracy.Core
             {
                 if (awaitingCount > permittedAwaitingCount)
                 {
-                    awaitingCount = lastAwaitingCount;
+                    awaitingCount = spawnCancelAwaitingCount;
                 }
             }
         }

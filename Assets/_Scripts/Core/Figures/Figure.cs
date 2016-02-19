@@ -13,7 +13,7 @@ namespace Hexocracy.Core
     {
         #region Definition
         protected StatsHolder statHolder;
-        
+
         protected Stat reds;
         protected Stat blues;
         protected Stat greens;
@@ -28,6 +28,11 @@ namespace Hexocracy.Core
         public Range RDamage { get; private set; }
 
         public float Damage { get { return RDamage; } }
+
+        private StatDependence simpleAttack;
+        private StatDependence penaltiAllyAttack;
+        private StatDependence penaltyFalling;
+        private StatDependence penaltyForcedMove;
 
         #endregion
         #region Properties
@@ -59,9 +64,10 @@ namespace Hexocracy.Core
             //_
 
             InitStats(data);
+            InitFight();
         }
 
-       
+
         #endregion
         #region Stats
 
@@ -71,7 +77,7 @@ namespace Hexocracy.Core
             greens = statHolder.Add(StatType.Green, 0, false);
             blues = statHolder.Add(StatType.Blue, 0, false);
 
-            mass = statHolder.Add(StatType.Mass, 0, false);
+            mass = statHolder.Add(StatType.Mass, 10, false);
 
             hp = (DynamicStat)statHolder.Add(StatType.HealthPoints, data.baseHP, true);
             ap = (DynamicStat)statHolder.Add(StatType.ActionPoints, data.actionPoints, true); ;
@@ -124,6 +130,16 @@ namespace Hexocracy.Core
         #endregion
         #region Fighting
 
+        protected virtual void InitFight()
+        {
+            var provider = new StatDependenceProvider(this, statHolder.GetStats(), DependenceType.Damage);
+
+            simpleAttack = (StatDependence)provider.Get("SimpleAttack");
+            //penaltiAllyAttack = (StatDependence)provider.Get("PenaltiAllyAttack");
+            //penaltyFalling = (StatDependence)provider.Get("Falling");
+            //penaltyForcedMove = (StatDependence)provider.Get("PenaltiForcedMove");
+        }
+
         public void OnAttack(IAttacker attacker, float dmg)
         {
             hp.CurrValue -= dmg;
@@ -162,7 +178,10 @@ namespace Hexocracy.Core
                 }
             }
             else
-                figure.OnAttack(this, Damage - bounceHeight * 2);
+            {
+                figure.OnAttack(this, simpleAttack.Calculate(100));
+            }
+            //figure.OnAttack(this, Damage - bounceHeight * 2);
         }
 
         protected override void OnHexLanded(Hex hex, int bounceHeight)

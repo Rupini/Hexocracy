@@ -45,13 +45,18 @@ namespace Hexocracy.Core
 
         public void InitializeDependencies()
         {
-            var provider = new StatDependence.Provider(stats);
+            var provider = new StatDependenceProvider(stats, DependenceType.Stat);
 
             foreach(var pair in stats)
             {
                 var dependence = provider.Get(pair.Key);
-                pair.Value.SetDependence(dependence.GetArguments(), dependence.CalculationFunction);
+                pair.Value.SetDependence(dependence.GetArgumentsOfType(), dependence.CalculationFunction);
             }
+        }
+
+        public Dictionary<StatType, Stat> GetStats()
+        {
+            return stats;
         }
     }
 }

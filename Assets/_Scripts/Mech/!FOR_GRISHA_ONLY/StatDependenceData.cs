@@ -7,9 +7,8 @@ namespace Hexocracy.Mech
 {
     public partial class StatDependenceData
     {
-        private static void Initialze()
+        private static void InitialzeStatData()
         {
-            data = new List<StatDependenceData>();
             InitialzeInstance(StatType.Red, x => x[0]);
             InitialzeInstance(StatType.Green, x => x[0]);
             InitialzeInstance(StatType.Blue, x => x[0]);
@@ -23,6 +22,14 @@ namespace Hexocracy.Mech
             InitialzeInstance(StatType.MinDamage, x => x[1] - x[1] * (0.5f - x[2] / (10 * x[3] + 100)), StatType.MaxDamage, StatType.Mass, StatType.Green);
 
             InitialzeInstance(StatType.Initiative, x => x[0]);
+        }
+
+        private static void InitialzeDamageData()
+        {
+            InitialzeInstance("SimpleAttack", x => x[0] + x[1] * x[2], "Damage", StatType.Mass);
+            //InitialzeInstance("PenaltiAllyAttack", x => (x[0] + x[3] * x[1]) * x[2] * 0.5f, "Damage", StatType.Mass, "AP");
+            //InitialzeInstance("Falling", x => x[0] * x[1], StatType.Mass);
+            //InitialzeInstance("PenaltiForcedMove", x => x[0] * x[1], "Damage", "AP");
         }
     }
 }
