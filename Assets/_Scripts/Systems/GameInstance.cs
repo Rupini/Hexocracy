@@ -17,9 +17,7 @@ namespace Hexocracy.Core
 
         private void Awake()
         {
-            //Player.Builder.Build(new string[] { "First guy", "Second guy", "Vasia" },
-            //    new int[][] { new int[] { 3, 4 }, new int[] { 2, 4 }, new int[] { 2, 3 } },
-            //null);
+            GameServices.Initialize();
 
             InitializeMainComponents();
 
@@ -43,11 +41,17 @@ namespace Hexocracy.Core
         private void Start()
         {
             var hexes = FindObjectsOfType<HexEditor>().ToList();
-            
+
             hexes.ForEach(hex => hex.ToGameInstance());
             hexes.ForEach(hex => hex.GetComponent<Hex>().PostInitialize());
 
             FindObjectsOfType<EditorBehaviour>().ToList().ForEach(editorObj => editorObj.ToGameInstance());
+
+            GameServices.Get<Nihility>().ToProcess();
+
+            foreach (var hex in GameServices.Get<Nihility>().GetAll())
+                Debug.Log(hex.Index + " nihility = " + hex.NihilityIndex);
+
             TurnController.Start();
         }
     }

@@ -10,8 +10,9 @@ namespace Hexocracy.Core
     {
         public static implicit operator int(Hex hex)
         {
-            return hex.GetHashCode();
+            return hex.EntityID;
         }
+
         #region Definition
 
         private GameMap container;
@@ -45,7 +46,7 @@ namespace Hexocracy.Core
         public Vector3 GroundCenter { get; private set; }
         #endregion
         #region Initialize
-        private Hex()
+        protected Hex()
         {
             additions = new List<IHexAddition>();
         }
@@ -74,14 +75,24 @@ namespace Hexocracy.Core
 
         public void PostInitialize()
         {
+            var nihility = GameServices.Get<Nihility>();
             Neighbors = new List<Hex>();
-            foreach (var index in NeighborsIndexes)
+            int i = 0;
+
+            foreach (var index in CircumIndices)
             {
                 var hex = container.Get(index);
                 if (hex)
                 {
                     Neighbors.Add(hex);
+                    Circum[i] = hex;
                 }
+                else
+                {
+                    Circum[i] = nihility.GetDefinedNull(index);
+                }
+
+                i++;
             }
         }
         #endregion
@@ -98,7 +109,7 @@ namespace Hexocracy.Core
 
         public bool HasFigure
         {
-            get { return Content != null && Content.Type == ContentType.Figure; }
+            get { return Content.Type == ContentType.Figure; }
         }
 
         public bool IsNeighbor(Hex hex)

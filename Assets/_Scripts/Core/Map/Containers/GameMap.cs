@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [GameService(GameServiceType.Container)]
     public class GameMap : Map
     {
         private static GameMap _i;
@@ -33,7 +34,7 @@ namespace Hexocracy.Core
                 var hexesAround = new List<Hex>();
                 hexesAround.Add(centerHex);
 
-                hexes[centerHex.GetHashCode()] = centerHex;
+                hexes[centerHex.EntityID] = centerHex;
 
                 for (int i = 0; i < radius; i++)
                 {
@@ -43,9 +44,9 @@ namespace Hexocracy.Core
                     {
                         foreach (var hex in hexAround.Neighbors)
                         {
-                            if (!hexes.ContainsKey(hex.GetHashCode()))
+                            if (!hexes.ContainsKey(hex.EntityID))
                             {
-                                hexes[hex.GetHashCode()] = hex;
+                                hexes[hex.EntityID] = hex;
                                 newHexesAround.Add(hex);
                             }
                         }

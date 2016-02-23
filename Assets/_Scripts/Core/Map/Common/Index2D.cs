@@ -8,10 +8,16 @@ namespace Hexocracy
     [Serializable]
     public struct Index2D
     {
+        public static implicit operator int(Index2D index)
+        {
+            return index.GetHashCode();
+        }
+
         private const int Y_FACTOR = 1000;
 
         private int x;
         private int y;
+        private int hashCode;
 
         public int X { get { return x; } }
 
@@ -21,11 +27,12 @@ namespace Hexocracy
         {
             this.x = x;
             this.y = y;
+            hashCode = x + y * 1000;
         }
 
         public override int GetHashCode()
         {
-            return X + Y * 1000;
+            return hashCode;
         }
 
         public override bool Equals(object obj)
@@ -37,7 +44,6 @@ namespace Hexocracy
         {
             return new Index2D(X + x, Y + y);
         }
-
 
         public override string ToString()
         {
