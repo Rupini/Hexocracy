@@ -41,16 +41,34 @@ namespace Hexocracy.Core
         private void Start()
         {
             var hexes = FindObjectsOfType<HexEditor>().ToList();
-
+            // Call from GameMap!
             hexes.ForEach(hex => hex.ToGameInstance());
-            hexes.ForEach(hex => hex.GetComponent<Hex>().PostInitialize());
+            hexes.ForEach(hex => hex.GetComponent<Hex>().DefineCircum());
 
             FindObjectsOfType<EditorBehaviour>().ToList().ForEach(editorObj => editorObj.ToGameInstance());
 
+            //var sw = new System.Diagnostics.Stopwatch();
+            //sw.Start();
             GameServices.Get<Nihility>().ToProcess();
+            //sw.Stop();
+            //Debug.Log(sw.ElapsedMilliseconds);
 
-            foreach (var hex in GameServices.Get<Nihility>().GetAll())
-                Debug.Log(hex.Index + " nihility = " + hex.NihilitySectorIndex);
+            //var nihility = GameServices.Get<Nihility>();
+
+            //for (int i = 0; i < nihility.SectorCount; i++)
+            //{
+            //    var sector = nihility.GetSector(i);
+            //    foreach (var hex in sector.Values)
+            //    {
+            //        Debug.Log(i + ") " + hex.Index);
+
+            //        var trans = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
+            //        trans.position = new Vector3(HexInfo.X_METRIC_K * HexInfo.A * hex.Index.X, 0, HexInfo.R * hex.Index.Y);
+            //        trans.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
+            //    }
+
+              
+            //}
 
             TurnController.Start();
         }

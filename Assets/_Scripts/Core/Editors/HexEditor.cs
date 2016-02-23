@@ -13,7 +13,7 @@ namespace Hexocracy.Core
         private const float DEFAULT_BASE_SCALE = 0.005f;
 
         public HexData data;
-        
+
         private int lastHeight = 1;
         private bool lastHasAddition;
         private Material defaultMaterial;
@@ -31,6 +31,8 @@ namespace Hexocracy.Core
             SetIndex(index);
             transform.SetParent(parent);
         }
+
+        public override void DefineCircum() { }
 
         private void Update()
         {
@@ -50,7 +52,7 @@ namespace Hexocracy.Core
 
         private void ChangeAdditionStatus()
         {
-            if(data.hasAddition != lastHasAddition)
+            if (data.hasAddition != lastHasAddition)
             {
                 lastHasAddition = data.hasAddition;
                 if (data.hasAddition)
@@ -64,7 +66,7 @@ namespace Hexocracy.Core
         {
             base.Awake();
             data.scaleY = t.localScale.y;
-            data.height = (int) (t.localScale.y / DEFAULT_BASE_SCALE);
+            data.height = (int)(t.localScale.y / DEFAULT_BASE_SCALE);
 
             defaultMaterial = Resources.Load<Material>("Models/Materials/hexDefaultMat");
             additionMaterial = Resources.Load<Material>("Models/Materials/hexAdditionMat");

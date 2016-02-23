@@ -12,5 +12,6 @@ namespace Hexocracy.Core
         Index2D Index { get; }
         IHex[] Circum { get; }
         Index2D[] CircumIndices { get; }
+        void DefineCircum();
     }
 }

@@ -72,8 +72,9 @@ namespace Hexocracy.Core
 
             Content = EmptyContent.Get();
         }
+        #endregion
 
-        public void PostInitialize()
+        public override void DefineCircum()
         {
             var nihility = GameServices.Get<Nihility>();
             Neighbors = new List<Hex>();
@@ -95,7 +96,7 @@ namespace Hexocracy.Core
                 i++;
             }
         }
-        #endregion
+
         public void OnContentEntered(IContainable content)
         {
             Content = content;

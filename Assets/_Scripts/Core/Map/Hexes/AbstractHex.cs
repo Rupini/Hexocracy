@@ -27,6 +27,8 @@ namespace Hexocracy.Core
         public IHex[] Circum { get; protected set; }
 
         public int EntityID { get { return Index; } }
+
+        public abstract void DefineCircum();
         #endregion
 
         public virtual void SetIndex(Index2D index)

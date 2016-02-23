@@ -24,11 +24,12 @@ namespace Hexocracy.Core
             }
         }
 
-        private List<Dictionary<int, NullHex>> sectors;
-        private Dictionary<int, NullHex> processingHex;
         private Dictionary<int, NullHex> undefineds;
+        private List<Dictionary<int, NullHex>> sectors;
 
         private bool externalSectorDefined;
+
+        private Dictionary<int, NullHex> processingHex;
 
         private Nihility()
         {
@@ -64,6 +65,18 @@ namespace Hexocracy.Core
             }
         }
 
+        public Dictionary<int, NullHex> GetSector(int sectorIndex)
+        {
+            return sectors[sectorIndex];
+        }
+
+        public Dictionary<int, NullHex> GetExternal()
+        {
+            return sectors[EXTERNAL_SECTOR_INDEX];
+        }
+
+        public int SectorCount { get { return sectors.Count; } }
+
         public void ToProcess()
         {
             processingHex = new Dictionary<int, NullHex>(entities);
@@ -73,16 +86,6 @@ namespace Hexocracy.Core
             {
                 BuildSector(processingHex.Values.First());
             }
-        }
-
-        public Dictionary<int, NullHex> GetSector(int sectorIndex)
-        {
-            return sectors[sectorIndex];
-        }
-
-        public Dictionary<int, NullHex> GetExternal()
-        {
-            return sectors[EXTERNAL_SECTOR_INDEX];
         }
 
         private void BuildSector(NullHex startingHex)
