@@ -29,10 +29,10 @@ namespace Hexocracy.Core
 
         public float Damage { get { return RDamage; } }
 
-        private StatDependence simpleAttack;
-        private StatDependence penaltiAllyAttack;
-        private StatDependence penaltyFalling;
-        private StatDependence penaltyForcedMove;
+        private GameDependence<Stat> simpleAttack;
+        private GameDependence<Stat> penaltiAllyAttack;
+        private GameDependence<Stat> penaltyFalling;
+        private GameDependence<Stat> penaltyForcedMove;
 
         #endregion
         #region Properties
@@ -106,9 +106,9 @@ namespace Hexocracy.Core
             }
         }
 
-        public int MaxAP { get { return ap; } }
+        public float MaxAP { get { return ap; } }
 
-        public override int AP
+        public override float AP
         {
             get
             {
@@ -132,12 +132,12 @@ namespace Hexocracy.Core
 
         protected virtual void InitFight()
         {
-            var provider = new StatDependenceProvider(this, statHolder.GetStats(), DependenceType.Damage);
+            var provider = new FigureDependenceProvider(this, statHolder.GetStats(), DependenceType.Damage);
 
-            simpleAttack = (StatDependence)provider.Get("SimpleAttack");
-            //penaltiAllyAttack = (StatDependence)provider.Get("PenaltiAllyAttack");
-            //penaltyFalling = (StatDependence)provider.Get("Falling");
-            //penaltyForcedMove = (StatDependence)provider.Get("PenaltiForcedMove");
+            simpleAttack = provider.Get(DamageDepenenceType.SimpleAttack);
+            penaltiAllyAttack = provider.Get(DamageDepenenceType.PenaltiAllyAttack);
+            penaltyFalling = provider.Get(DamageDepenenceType.PenanltiFalling);
+            penaltyForcedMove = provider.Get(DamageDepenenceType.PenaltiForcedMove);
         }
 
         public void OnAttack(IAttacker attacker, float dmg)
@@ -174,27 +174,26 @@ namespace Hexocracy.Core
             {
                 if (forced && ap.CurrValue <= 0)
                 {
-                    figure.OnAttack(this, (Damage - bounceHeight * 2) * (-ap.CurrValue * 0.5f));
+                    figure.OnAttack(this, penaltiAllyAttack.Calculate(-bounceHeight));
                 }
             }
             else
             {
-                figure.OnAttack(this, simpleAttack.Calculate(100));
+                figure.OnAttack(this, simpleAttack.Calculate(-bounceHeight));
             }
-            //figure.OnAttack(this, Damage - bounceHeight * 2);
         }
 
         protected override void OnHexLanded(Hex hex, int bounceHeight)
         {
-            if (bounceHeight < -1)
+            if (bounceHeight < -jumpDownHeight)
             {
-                OnAttack(this, -bounceHeight * 2);
+                OnAttack(this, penaltyFalling.Calculate(-bounceHeight));
             }
         }
 
         protected override void OnForcedMovePenalti()
         {
-            OnAttack(this, -Damage * ap.CurrValue);
+            OnAttack(this, penaltyForcedMove.Calculate());
         }
 
         protected override void OnTurnStarted(bool newRound)

@@ -25,7 +25,7 @@ namespace Hexocracy.Mech
         {
         }
 
-        public LinkDependece<TLink, T> Get(TLink link)
+        public LinkDependece<TLink, T> Get(Enum link)
         {
             return Get(link.ToString());
         }

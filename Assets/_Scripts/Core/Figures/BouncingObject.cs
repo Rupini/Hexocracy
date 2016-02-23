@@ -27,8 +27,10 @@ namespace Hexocracy.Core
         private Path currPath;
 
         protected int ownerPlayerIndex;
+        protected int jumpUpHeight;
+        protected int jumpDownHeight;
 
-        public abstract int AP { get; protected set; }
+        public abstract float AP { get; protected set; }
 
         #region Initialize
         protected override void Awake()
@@ -40,9 +42,11 @@ namespace Hexocracy.Core
         public virtual void Initialize(FigureContainer container, FigureData data)
         {
             this.container = container;
+            jumpUpHeight = data.jumpUpHeight;
+            jumpDownHeight = data.jumpDownHeight;
 
             angle = data.jumpingAngle * Mathf.Deg2Rad;
-            pathFinder = new DijkstraPathFinder(data.jumpUpHeight, data.jumpDownHeight);
+            pathFinder = new DijkstraPathFinder(jumpUpHeight, jumpDownHeight);
             body = GetComponent<Rigidbody>();
             Height = GetComponent<Collider>().bounds.size.y;
 
@@ -269,8 +273,6 @@ namespace Hexocracy.Core
         protected abstract void OnFigureCollided(Figure figure, int bounceHeight, bool forced);
 
         protected abstract void OnHexLanded(Hex hex, int bounceHeight);
-
-       
 
         protected abstract void OnItemBoxContact(IContainable item);
         #endregion

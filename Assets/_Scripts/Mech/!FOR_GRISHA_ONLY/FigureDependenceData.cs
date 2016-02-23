@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hexocracy.Mech
 {
-    public partial class StatDependenceData
+    public partial class FigureDependenceData
     {
         private static void InitialzeStatData()
         {
@@ -26,10 +26,10 @@ namespace Hexocracy.Mech
 
         private static void InitialzeDamageData()
         {
-            InitialzeInstance("SimpleAttack", x => x[0] + x[1] * x[2], "Damage", StatType.Mass);
-            //InitialzeInstance("PenaltiAllyAttack", x => (x[0] + x[3] * x[1]) * x[2] * 0.5f, "Damage", StatType.Mass, "AP");
-            //InitialzeInstance("Falling", x => x[0] * x[1], StatType.Mass);
-            //InitialzeInstance("PenaltiForcedMove", x => x[0] * x[1], "Damage", "AP");
+            InitialzeInstance(DamageDepenenceType.SimpleAttack, x => x[0] + x[1] * x[2], "Damage", StatType.Mass);
+            InitialzeInstance(DamageDepenenceType.PenaltiAllyAttack, x => (x[0] + x[3] * x[1]) * x[2] * 0.5f, "Damage", StatType.Mass, "AP");
+            InitialzeInstance(DamageDepenenceType.PenanltiFalling, x => x[0] * x[1], StatType.Mass);
+            InitialzeInstance(DamageDepenenceType.PenaltiForcedMove, x => x[0] * (-x[1]), "Damage", "AP");
         }
     }
 }

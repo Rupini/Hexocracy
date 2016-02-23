@@ -45,7 +45,7 @@ namespace Hexocracy.Core
 
         public void InitializeDependencies()
         {
-            var provider = new StatDependenceProvider(stats, DependenceType.Stat);
+            var provider = new FigureDependenceProvider(stats, DependenceType.Stat);
 
             foreach(var pair in stats)
             {
