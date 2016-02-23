@@ -74,9 +74,10 @@ namespace Hexocracy.Core
 
         public void ToGameInstance()
         {
+            var map = GameServices.Get<GameMap>();
             var hex = go.AddComponent<Hex>();
-            hex.Initialize(GameMap.I, data);
-            GameMap.I.Add(hex);
+            hex.Initialize(map, data);
+            map.Add(hex);
             Destroy(this);
         }
     }

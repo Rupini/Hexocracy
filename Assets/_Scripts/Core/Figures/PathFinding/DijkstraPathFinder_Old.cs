@@ -57,7 +57,7 @@ namespace Hexocracy.Core
 
         private bool Find()
         {
-            for (int i = 0; i < GameMap.I.Count - 1; i++)
+            for (int i = 0; i < map.Count - 1; i++)
             {
                 Hex v = PriorityGetMin();
                 H[v] = v;

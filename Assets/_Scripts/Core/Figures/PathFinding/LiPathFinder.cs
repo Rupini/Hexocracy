@@ -6,6 +6,8 @@ namespace Hexocracy.Core
 {
     public class LiPathFinder : PathFinder
     {
+       
+
         private const int OBSTACLE_FLAG = -1;
         private const int UNDEFINED_FlAG = 0;
         private const int ORIGIN_FLAG = 1;
@@ -18,7 +20,7 @@ namespace Hexocracy.Core
 
         protected override Path FindOriginalPath(Hex origin, Hex destination = null, bool forced = false, Func<Hex, PassibilityType> checkPassibiliy = null, Func<Hex, bool> isTarget = null)
         {
-            GameMap.I.ResetFlags(UNDEFINED_FlAG);
+            map.ResetFlags(UNDEFINED_FlAG);
 
             origin.FindFlag = ORIGIN_FLAG;
 

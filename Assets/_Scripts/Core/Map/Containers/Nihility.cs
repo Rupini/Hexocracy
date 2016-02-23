@@ -8,7 +8,7 @@ namespace Hexocracy.Core
     [GameService(GameServiceType.Container | GameServiceType.Factory)]
     public class Nihility : EntityContainer<NullHex>
     {
-        public const int EXTERNAL_NIHILITY_INDEX = 0;
+        public const int EXTERNAL_SECTOR_INDEX = 0;
 
         private GameMap _map;
         private GameMap map
@@ -75,6 +75,16 @@ namespace Hexocracy.Core
             }
         }
 
+        public Dictionary<int, NullHex> GetSector(int sectorIndex)
+        {
+            return sectors[sectorIndex];
+        }
+
+        public Dictionary<int, NullHex> GetExternal()
+        {
+            return sectors[EXTERNAL_SECTOR_INDEX];
+        }
+
         private void BuildSector(NullHex startingHex)
         {
             var hexes = new Dictionary<int, NullHex>() { { startingHex.EntityID, startingHex } };
@@ -102,12 +112,12 @@ namespace Hexocracy.Core
                 nextIteration.Clear();
             }
             //End
-            var nihilityIndex = CheckOnExternal(hexes.Values) ? EXTERNAL_NIHILITY_INDEX : sectors.Count;
+            var nihilityIndex = CheckOnExternal(hexes.Values) ? EXTERNAL_SECTOR_INDEX : sectors.Count;
 
             foreach (var hex in hexes.Values)
             {
                 processingHex.Remove(hex.EntityID);
-                hex.SetNihilityIndex(nihilityIndex);
+                hex.SetNihilitySectorIndex(nihilityIndex);
             }
 
             sectors.Insert(nihilityIndex, hexes);

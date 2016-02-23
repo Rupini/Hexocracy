@@ -50,7 +50,7 @@ namespace Hexocracy.Core
             GameServices.Get<Nihility>().ToProcess();
 
             foreach (var hex in GameServices.Get<Nihility>().GetAll())
-                Debug.Log(hex.Index + " nihility = " + hex.NihilityIndex);
+                Debug.Log(hex.Index + " nihility = " + hex.NihilitySectorIndex);
 
             TurnController.Start();
         }

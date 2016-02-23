@@ -10,8 +10,9 @@ namespace Hexocracy.Core
     {
         private List<GlobalItemSpawnerAgent> agents;
 
-        public void Initialize(GameMap map, GlobalItemSpawnerData data)
+        public void Initialize(GlobalItemSpawnerData data)
         {
+            var map = GameServices.Get<GameMap>();
             agents = new List<GlobalItemSpawnerAgent>();
             foreach(var agentData in data.agents)
             {

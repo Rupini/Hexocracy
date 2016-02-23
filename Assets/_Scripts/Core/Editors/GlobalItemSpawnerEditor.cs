@@ -12,7 +12,7 @@ namespace Hexocracy.Core
 
         public override void ToGameInstance()
         {
-            go.AddComponent<GlobalItemSpawner>().Initialize(GameMap.I, data);
+            go.AddComponent<GlobalItemSpawner>().Initialize(data);
             Destroy(this);
         }
 

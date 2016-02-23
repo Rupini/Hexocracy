@@ -9,6 +9,8 @@ namespace Hexocracy.Core
 {
     public abstract class PathFinder
     {
+        protected GameMap map;
+
         protected Hex destination;
         protected Func<Hex, PassibilityType> checkPassibility;
         protected Func<Hex, bool> isTarget;
@@ -18,6 +20,7 @@ namespace Hexocracy.Core
 
         public PathFinder(int jumpUpHeight, int jumpDownHeight)
         {
+            map = GameServices.Get<GameMap>();
             this.jumpUpHeight = jumpUpHeight;
             this.jumpDownHeight = jumpDownHeight;
         }

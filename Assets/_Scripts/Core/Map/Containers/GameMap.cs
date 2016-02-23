@@ -9,16 +9,6 @@ namespace Hexocracy.Core
     [GameService(GameServiceType.Container)]
     public class GameMap : Map
     {
-        private static GameMap _i;
-        public static GameMap I
-        {
-            get
-            {
-                if (_i == null) _i = new GameMap();
-                return _i;
-            }
-        }
-
         public List<Hex> GetAll()
         {
             return hexes.Values.ToList();

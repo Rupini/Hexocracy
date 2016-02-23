@@ -23,9 +23,9 @@ namespace Hexocracy.Core
 
         public bool Defined { get; private set; }
 
-        public int NihilityIndex { get; private set; }
+        public int NihilitySectorIndex { get; private set; }
 
-        public bool InExternalNihility { get { return NihilityIndex == Nihility.EXTERNAL_NIHILITY_INDEX; } }
+        public bool InExternalNihility { get { return NihilitySectorIndex == Nihility.EXTERNAL_SECTOR_INDEX; } }
 
         public NullHex(Index2D index)
             : this(index, true)
@@ -63,9 +63,9 @@ namespace Hexocracy.Core
             }
         }
 
-        public void SetNihilityIndex(int nihilityIndex)
+        public void SetNihilitySectorIndex(int nihilityIndex)
         {
-            NihilityIndex = nihilityIndex;
+            NihilitySectorIndex = nihilityIndex;
         }
     }
 }
