@@ -44,6 +44,7 @@ namespace Hexocracy.Core
         protected Figure()
         {
             statHolder = new StatsHolder();
+            EntityID = GetInstanceID();
         }
 
         protected override void Awake()
@@ -238,8 +239,6 @@ namespace Hexocracy.Core
             defaultColor = r.material.color;
             r.material.color = new Color(1, 1, 1);
         }
-
-        public int EntityID { get { return GetInstanceID(); } }
 
         #endregion
 

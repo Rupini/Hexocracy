@@ -9,8 +9,8 @@ namespace Hexocracy.Core
     {
         protected Dictionary<int, T> entities;
 
-        public virtual event Action<T> OnAdd = delegate { };
-        public virtual event Action<T> OnRemove = delegate { };
+        public virtual event Action<IEnumerable<T>> OnAdd = delegate { };
+        public virtual event Action<IEnumerable<T>> OnRemove = delegate { };
 
         protected EntityContainer()
         {
@@ -19,17 +19,30 @@ namespace Hexocracy.Core
 
         public void Add(T entity)
         {
-            entities[entity.EntityID] = entity;
+            Add(new[] { entity });
         }
 
-        public void Remove(int id)
+        public virtual void Add(IEnumerable<T> entityCollection)
         {
-            entities.Remove(id);
+            foreach (var entity in entityCollection)
+            {
+                entities[entity.EntityID] = entity;
+            }
+            OnAdd(entityCollection);
         }
 
         public void Remove(T entity)
         {
-            entities.Remove(entity.EntityID);
+            Remove(new[] { entity });
+        }
+
+        public virtual void Remove(IEnumerable<T> entityCollection)
+        {
+            foreach (var entity in entityCollection)
+            {
+                entities.Remove(entity.EntityID);
+            }
+            OnRemove(entityCollection);
         }
 
         public List<T> GetAll()
@@ -53,6 +66,14 @@ namespace Hexocracy.Core
         public void Clear()
         {
             entities.Clear();
+        }
+
+        public int Count
+        {
+            get
+            {
+                return entities.Count;
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public class ItemBoxEditor : EditorBehaviour
+    public class ItemBoxEditor : EditorBehaviour<ItemBox>
     {
         public ItemType type;
         
@@ -54,10 +54,12 @@ namespace Hexocracy.Core
             r.sharedMaterial.color = data.color;
         }
 
-        public override void ToGameInstance()
+        public override ItemBox ToGameInstance()
         {
-            go.AddComponent<ItemBox>().Initialize(Player.NeutralPassive, data);
-            Destroy(this); 
+            var itemBox = go.AddComponent<ItemBox>();
+            itemBox.Initialize(Player.NeutralPassive, data);
+            Destroy(this);
+            return itemBox;
         }
     }
 }

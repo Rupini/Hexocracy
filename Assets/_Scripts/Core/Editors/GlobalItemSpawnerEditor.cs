@@ -6,18 +6,17 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public class GlobalItemSpawnerEditor : EditorBehaviour
+    public class GlobalItemSpawnerEditor : EditorBehaviour<GlobalItemSpawner>
     {
         public GlobalItemSpawnerData data;
 
-        public override void ToGameInstance()
+        public override GlobalItemSpawner ToGameInstance()
         {
-            go.AddComponent<GlobalItemSpawner>().Initialize(data);
+            var itemSpawner = go.AddComponent<GlobalItemSpawner>();
+            itemSpawner.Initialize(data);
             Destroy(this);
+            return itemSpawner;
         }
-
-        private void Update()
-        {
-        }
+      
     }
 }

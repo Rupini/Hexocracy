@@ -3,8 +3,12 @@
 namespace Hexocracy.Core
 {
     [ExecuteInEditMode]
-    public abstract class EditorBehaviour : CachedMonoBehaviour, IEditorBehaviour
+    public abstract class EditorBehaviour<T> : CachedMonoBehaviour, IEditorBehaviour<T>
     {
-        public abstract void ToGameInstance();
+        public void InitGameInstance()
+        {
+            ToGameInstance();
+        }
+        public abstract T ToGameInstance();
     }
 }

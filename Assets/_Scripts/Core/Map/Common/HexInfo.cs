@@ -9,8 +9,8 @@ namespace Hexocracy.Core
     public static class HexInfo
     {
         private const string PREFAB_PATH = "Prefabs/Play/Hex";
-        public const float X_METRIC_K = 1.5f;
-        
+        private const float X_METRIC_K = 1.5f;
+
         private static Hex _prefab;
         public static Hex Prefab
         {
@@ -66,6 +66,11 @@ namespace Hexocracy.Core
             };
 
             return circumIndices;
+        }
+
+        public static Vector3 IndexToVector(Index2D index, float height = 0)
+        {
+            return new Vector3(index.X * X_METRIC_K * A, height, index.Y * R);
         }
     }
 }

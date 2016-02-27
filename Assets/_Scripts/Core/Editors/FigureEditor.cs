@@ -8,7 +8,7 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    public class FigureEditor : EditorBehaviour
+    public class FigureEditor : EditorBehaviour<Figure>
     {
         public FigureData data;
 
@@ -43,10 +43,11 @@ namespace Hexocracy.Core
             r.sharedMaterial.color = data.color;
         }
 
-        public override void ToGameInstance()
+        public override Figure ToGameInstance()
         {
             FigureFactory.I.Create(go, data);
             GameObject.Destroy(this);
+            return go.GetComponent<Figure>();
         }
     }
 }

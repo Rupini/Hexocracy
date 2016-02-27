@@ -55,23 +55,11 @@ namespace Hexocracy.Core
         {
             if (owner.Content.Type == ContentType.Empty)
             {
-                //var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-
-                //var position = owner.GroundCenter;
-                //position.y += 2;
-                //go.transform.position = position;
-
-                //var itemBox = go.AddComponent<ItemBox>();
-
-                //GameObject.Destroy(go.GetComponent<BoxCollider>());
-
                 var data = new ElementData();
                 data.capacity = count;
                 data.kind = kind;
 
                 ItemFactory.I.Create(data, owner);
-                //itemBox.Initialize(data);
             }
         }
 

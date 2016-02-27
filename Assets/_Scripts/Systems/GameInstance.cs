@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.HelpTools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,12 +41,12 @@ namespace Hexocracy.Core
 
         private void Start()
         {
-            var hexes = FindObjectsOfType<HexEditor>().ToList();
-            // Call from GameMap!
-            hexes.ForEach(hex => hex.ToGameInstance());
-            hexes.ForEach(hex => hex.GetComponent<Hex>().DefineCircum());
+            GameServices.Get<GameMap>().Initialize();
 
-            FindObjectsOfType<EditorBehaviour>().ToList().ForEach(editorObj => editorObj.ToGameInstance());
+            GameObjectUtility.FindObjectsOfInterfaceType<IEditorBehaviour>().ForEach(editor => 
+            {
+                if (editor.GetType() != typeof(HexEditor)) editor.InitGameInstance();
+            });
 
             //var sw = new System.Diagnostics.Stopwatch();
             //sw.Start();
@@ -63,11 +64,11 @@ namespace Hexocracy.Core
             //        Debug.Log(i + ") " + hex.Index);
 
             //        var trans = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
-            //        trans.position = new Vector3(HexInfo.X_METRIC_K * HexInfo.A * hex.Index.X, 0, HexInfo.R * hex.Index.Y);
+            //        trans.position = HexInfo.IndexToVector(hex.Index);
             //        trans.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
             //    }
 
-              
+
             //}
 
             TurnController.Start();

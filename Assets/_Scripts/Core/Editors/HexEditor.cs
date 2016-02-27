@@ -8,7 +8,7 @@ using Hexocracy.CustomEditor;
 namespace Hexocracy.Core
 {
     [ExecuteInEditMode]
-    public class HexEditor : AbstractHex, IEditorBehaviour
+    public class HexEditor : AbstractHex, IEditorBehaviour<Hex>
     {
         private const float DEFAULT_BASE_SCALE = 0.005f;
 
@@ -74,13 +74,17 @@ namespace Hexocracy.Core
             lastHasAddition = data.hasAddition;
         }
 
-        public void ToGameInstance()
+        public void InitGameInstance()
         {
-            var map = GameServices.Get<GameMap>();
+            ToGameInstance();
+        }
+
+        public Hex ToGameInstance()
+        {
             var hex = go.AddComponent<Hex>();
-            hex.Initialize(map, data);
-            map.Add(hex);
+            hex.Initialize(data);
             Destroy(this);
+            return hex;
         }
     }
 }

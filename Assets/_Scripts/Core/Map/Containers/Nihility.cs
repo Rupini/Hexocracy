@@ -10,19 +10,7 @@ namespace Hexocracy.Core
     {
         public const int EXTERNAL_SECTOR_INDEX = 0;
 
-        private GameMap _map;
-        private GameMap map
-        {
-            get
-            {
-                if (_map == null)
-                {
-                    _map = GameServices.Get<GameMap>();
-                }
-
-                return _map;
-            }
-        }
+        private GameMap map;
 
         private Dictionary<int, NullHex> undefineds;
         private List<Dictionary<int, NullHex>> sectors;
@@ -30,12 +18,19 @@ namespace Hexocracy.Core
         private bool externalSectorDefined;
 
         private Dictionary<int, NullHex> processingHex;
-
+        #region Initialize
         private Nihility()
         {
             undefineds = new Dictionary<int, NullHex>();
         }
 
+        private void post_ctor()
+        {
+            map = GameServices.Get<GameMap>();
+            map.OnAdd += OnAdded;
+            map.OnRemove += OnRemoved;
+        }
+        #endregion
         public NullHex GetDefinedNull(Index2D index)
         {
             var hex = Get(index);
@@ -76,6 +71,8 @@ namespace Hexocracy.Core
         }
 
         public int SectorCount { get { return sectors.Count; } }
+
+        #region Process
 
         public void ToProcess()
         {
@@ -146,6 +143,17 @@ namespace Hexocracy.Core
                 externalSectorDefined = isExternalSector;
                 return isExternalSector;
             }
+        }
+        #endregion
+
+        private void OnAdded(IEnumerable<Hex> hexes)
+        {
+
+        }
+
+        private void OnRemoved(IEnumerable<Hex> hexes)
+        {
+
         }
     }
 }

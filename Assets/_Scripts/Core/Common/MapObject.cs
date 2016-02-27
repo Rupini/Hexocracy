@@ -11,6 +11,8 @@ namespace Hexocracy.Core
         protected Hex currentHex;
 
         #region IContainable
+        public int EntityID { get; protected set; }
+
         public abstract ContentType Type { get; }
 
         public float Height { get; protected set; }

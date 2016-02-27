@@ -5,18 +5,12 @@ using System.Text;
 
 namespace Hexocracy.Core
 {
-    public interface IContainable
+    public interface IContainable : IEntity
     {
         ContentType Type { get; }
 
         float Height { get; }
 
         Player Owner { get; }
-
-        bool Destroyed { get; }
-
-        void Destroy();
-
-        event Action OnDestroy;
     }
 }

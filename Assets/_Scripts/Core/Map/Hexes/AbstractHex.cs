@@ -14,6 +14,22 @@ namespace Hexocracy.Core
             Circum = new IHex[6];
         }
 
+        #region IEntity
+
+        public int EntityID { get { return Index; } }
+
+        public event Action OnDestroy = delegate { };
+
+        public bool Destroyed { get; private set; }
+
+        public void Destroy()
+        {
+            Destroy(go);
+            Destroyed = true;
+            OnDestroy();
+        }
+
+        #endregion
         #region IHex
 
         public bool Defined { get { return true; } }
@@ -25,8 +41,6 @@ namespace Hexocracy.Core
         public Index2D[] CircumIndices { get; protected set; }
 
         public IHex[] Circum { get; protected set; }
-
-        public int EntityID { get { return Index; } }
 
         public abstract void DefineCircum();
         #endregion

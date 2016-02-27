@@ -7,6 +7,11 @@ namespace Hexocracy.Core
 {
     public interface IEditorBehaviour
     {
-        void ToGameInstance();
+        void InitGameInstance();
+    }
+
+    public interface IEditorBehaviour<T> : IEditorBehaviour
+    {
+        T ToGameInstance();
     }
 }

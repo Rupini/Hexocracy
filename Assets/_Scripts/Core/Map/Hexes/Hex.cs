@@ -15,7 +15,8 @@ namespace Hexocracy.Core
 
         #region Definition
 
-        private GameMap container;
+        private GameMap map;
+        private Nihility nihility;
         private int _findFlag;
         private List<IHexAddition> additions;
 
@@ -48,12 +49,14 @@ namespace Hexocracy.Core
         #region Initialize
         protected Hex()
         {
-            additions = new List<IHexAddition>();
+            
         }
 
-        public void Initialize(GameMap container, HexData data)
+        public void Initialize(HexData data)
         {
-            this.container = container;
+            additions = new List<IHexAddition>();
+            map = GameServices.Get<GameMap>();
+            nihility = GameServices.Get<Nihility>();
 
             SetIndex(new Index2D(data.xIndex, data.yIndex));
             H = data.height;
@@ -76,13 +79,12 @@ namespace Hexocracy.Core
 
         public override void DefineCircum()
         {
-            var nihility = GameServices.Get<Nihility>();
             Neighbors = new List<Hex>();
             int i = 0;
 
             foreach (var index in CircumIndices)
             {
-                var hex = container.Get(index);
+                var hex = map.Get(index);
                 if (hex)
                 {
                     Neighbors.Add(hex);

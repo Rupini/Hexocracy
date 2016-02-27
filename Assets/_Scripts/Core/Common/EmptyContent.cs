@@ -21,6 +21,8 @@ namespace Hexocracy.Core
 
         private EmptyContent() { }
 
+        public int EntityID { get; private set; }
+
         public bool Destroyed { get { return false; } }
 
         public float Height { get { return 0; } }

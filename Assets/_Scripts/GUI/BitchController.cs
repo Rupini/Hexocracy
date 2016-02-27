@@ -12,7 +12,7 @@ namespace Hexocracy.View
     {
         private Text text;
 
-        float startScale; float endScale; float time; string msg;
+        float startScale; float endScale; float time;
 
         float currTime;
 
@@ -32,7 +32,6 @@ namespace Hexocracy.View
 
             this.endScale = endScale;
             this.time = time;
-            this.msg = msg;
 
             GetComponent<RectTransform>().localPosition = new Vector3();
         }
