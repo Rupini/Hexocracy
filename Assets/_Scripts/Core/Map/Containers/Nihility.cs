@@ -18,6 +18,9 @@ namespace Hexocracy.Core
         private bool externalSectorDefined;
 
         private Dictionary<int, NullHex> processingHex;
+
+        public event Action OnProcessComplete = delegate { };
+
         #region Initialize
         private Nihility()
         {
@@ -27,8 +30,8 @@ namespace Hexocracy.Core
         private void post_ctor()
         {
             map = GameServices.Get<GameMap>();
-            map.OnAdd += OnAdded;
-            map.OnRemove += OnRemoved;
+            map.OnAdd += OnHexAdded;
+            map.OnRemove += OnHexRemoved;
         }
         #endregion
         public NullHex GetDefinedNull(Index2D index)
@@ -78,11 +81,14 @@ namespace Hexocracy.Core
         {
             processingHex = new Dictionary<int, NullHex>(entities);
             sectors = new List<Dictionary<int, NullHex>>();
+            externalSectorDefined = false;
 
             while (processingHex.Count > 0)
             {
                 BuildSector(processingHex.Values.First());
             }
+
+            OnProcessComplete();
         }
 
         private void BuildSector(NullHex startingHex)
@@ -146,14 +152,20 @@ namespace Hexocracy.Core
         }
         #endregion
 
-        private void OnAdded(IEnumerable<Hex> hexes)
+        private void OnHexAdded(IEnumerable<Hex> hexes)
         {
+            foreach(var hex in hexes)
+            {
+                entities.Remove(hex.EntityID);
+            }
 
+            ToProcess();
         }
 
-        private void OnRemoved(IEnumerable<Hex> hexes)
+        private void OnHexRemoved(IEnumerable<Hex> hexes)
         {
 
+            ToProcess();
         }
     }
 }

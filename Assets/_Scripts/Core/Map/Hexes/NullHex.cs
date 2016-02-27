@@ -45,7 +45,6 @@ namespace Hexocracy.Core
         public NullHex(Index2D index, bool defined)
         {
             Defined = defined;
-            Circum = new IHex[6];
             Index = index;
             CircumIndices = HexInfo.GetCircumIndices(index);
         }
@@ -54,6 +53,7 @@ namespace Hexocracy.Core
         {
             var nihility = GameServices.Get<Nihility>();
             var map = GameServices.Get<GameMap>();
+            Circum = new IHex[6];
 
             for (int i = 0; i < CircumIndices.Length; i++)
             {

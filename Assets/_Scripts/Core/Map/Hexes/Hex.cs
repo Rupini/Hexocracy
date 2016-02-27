@@ -47,11 +47,6 @@ namespace Hexocracy.Core
         public Vector3 GroundCenter { get; private set; }
         #endregion
         #region Initialize
-        protected Hex()
-        {
-            
-        }
-
         public void Initialize(HexData data)
         {
             additions = new List<IHexAddition>();
@@ -79,6 +74,7 @@ namespace Hexocracy.Core
 
         public override void DefineCircum()
         {
+            Circum = new IHex[6];
             Neighbors = new List<Hex>();
             int i = 0;
 

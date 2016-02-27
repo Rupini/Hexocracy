@@ -43,35 +43,67 @@ namespace Hexocracy.Core
         {
             GameServices.Get<GameMap>().Initialize();
 
-            GameObjectUtility.FindObjectsOfInterfaceType<IEditorBehaviour>().ForEach(editor => 
+            GameObjectUtility.FindObjectsOfInterfaceType<IEditorBehaviour>().ForEach(editor =>
             {
                 if (editor.GetType() != typeof(HexEditor)) editor.InitGameInstance();
             });
 
             //var sw = new System.Diagnostics.Stopwatch();
             //sw.Start();
+            GameServices.Get<Nihility>().OnProcessComplete += OnProcessComplete;
             GameServices.Get<Nihility>().ToProcess();
             //sw.Stop();
             //Debug.Log(sw.ElapsedMilliseconds);
 
-            //var nihility = GameServices.Get<Nihility>();
-
-            //for (int i = 0; i < nihility.SectorCount; i++)
-            //{
-            //    var sector = nihility.GetSector(i);
-            //    foreach (var hex in sector.Values)
-            //    {
-            //        Debug.Log(i + ") " + hex.Index);
-
-            //        var trans = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
-            //        trans.position = HexInfo.IndexToVector(hex.Index);
-            //        trans.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
-            //    }
-
-
-            //}
+            TurnController.TurnFinished += OnRoundEnd;
 
             TurnController.Start();
+        }
+
+        private List<GameObject> balls = new List<GameObject>();
+
+        private void OnProcessComplete()
+        {
+            balls.RemoveAll(ball => { Destroy(ball); return true; });
+
+            var nihility = GameServices.Get<Nihility>();
+
+            for (int i = 0; i < nihility.SectorCount; i++)
+            {
+                var sector = nihility.GetSector(i);
+                foreach (var hex in sector.Values)
+                {
+                    Debug.Log(i + ") " + hex.Index);
+
+                    var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    var trans = go.transform;
+                    trans.position = HexInfo.IndexToVector(hex.Index);
+                    trans.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
+                    balls.Add(go);
+                }
+
+
+            }
+        }
+
+        private void OnRoundEnd(bool roundEnd)
+        {
+            if (roundEnd)
+            {
+                var list = new List<Hex>();
+                var hex = GameServices.Get<GameMap>().GetAll().GetRandom();
+
+                foreach(var neighboor in hex.Neighbors)
+                {
+                    list.Add(neighboor);
+                    neighboor.Destroy();
+                }
+
+                list.Add(hex);
+                hex.Destroy();
+
+                GameServices.Get<GameMap>().Remove(list);
+            }
         }
     }
 }

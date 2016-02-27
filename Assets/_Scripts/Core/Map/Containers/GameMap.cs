@@ -9,17 +9,21 @@ namespace Hexocracy.Core
     [GameService(GameServiceType.Container)]
     public class GameMap : EntityContainer<Hex>
     {
+        public override event Action<IEnumerable<Hex>> OnAdd = delegate { };
+        public override event Action<IEnumerable<Hex>> OnRemove = delegate { };
+
         public void Initialize()
         {
             var editorHexes = GameObject.FindObjectsOfType<HexEditor>().ToList();
-            var hexes = editorHexes.ConvertAll(editorHex => 
+            var hexes = editorHexes.ConvertAll(editorHex =>
             {
                 var hex = editorHex.ToGameInstance();
+                DefineMainIndicesOnAdd(hex.Index);
                 entities[hex.EntityID] = hex;
                 return hex;
             });
 
-            foreach(var hex in hexes)
+            foreach (var hex in hexes)
             {
                 hex.DefineCircum();
             }
@@ -77,14 +81,38 @@ namespace Hexocracy.Core
         {
             foreach (var hex in hexes)
             {
-                DefineMainIndices(hex.Index);
+                DefineMainIndicesOnAdd(hex.Index);
+                entities[hex.EntityID] = hex;
             }
-            base.Add(hexes);
+
+            foreach (var hex in hexes)
+            {
+                foreach (var curcumHex in hex.Circum)
+                {
+                    curcumHex.DefineCircum();
+                }
+            }
+
+            OnAdd(hexes);
         }
 
         public override void Remove(IEnumerable<Hex> hexes)
         {
-            base.Remove(hexes);
+            foreach (var hex in hexes)
+            {
+                DefineMainIndicesOnRemove(hex.Index);
+                entities.Remove(hex.EntityID);
+            }
+
+            foreach (var hex in hexes)
+            {
+                foreach (var curcumHex in hex.Circum)
+                {
+                    curcumHex.DefineCircum();
+                }
+            }
+
+            OnRemove(hexes);
         }
 
         public bool InMapRange(Index2D index)
@@ -92,12 +120,20 @@ namespace Hexocracy.Core
             return index.X <= MaxIndex.X && index.Y <= MaxIndex.Y && index.X >= MinIndex.X && index.Y >= MinIndex.Y;
         }
 
-        private void DefineMainIndices(Index2D index)
+        private void DefineMainIndicesOnAdd(Index2D index)
         {
             if (index.X > MaxIndex.X) MaxIndex = new Index2D(index.X, MaxIndex.Y);
             if (index.Y > MaxIndex.Y) MaxIndex = new Index2D(MaxIndex.X, index.Y);
             if (index.X < MinIndex.X) MinIndex = new Index2D(index.X, MinIndex.Y);
             if (index.Y < MinIndex.Y) MinIndex = new Index2D(MinIndex.X, index.Y);
+        }
+
+        private void DefineMainIndicesOnRemove(Index2D index)
+        {
+            if (index.X == MaxIndex.X) MaxIndex = new Index2D(index.X - 1, MaxIndex.Y);
+            if (index.Y == MaxIndex.Y) MaxIndex = new Index2D(MaxIndex.X, index.Y-1);
+            if (index.X == MinIndex.X) MinIndex = new Index2D(index.X+1, MinIndex.Y);
+            if (index.Y == MinIndex.Y) MinIndex = new Index2D(MinIndex.X, index.Y+1);
         }
     }
 }

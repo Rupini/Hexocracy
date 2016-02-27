@@ -9,11 +9,6 @@ namespace Hexocracy.Core
 {
     public abstract class AbstractHex : CachedMonoBehaviour, IHex
     {
-        protected AbstractHex()
-        {
-            Circum = new IHex[6];
-        }
-
         #region IEntity
 
         public int EntityID { get { return Index; } }
