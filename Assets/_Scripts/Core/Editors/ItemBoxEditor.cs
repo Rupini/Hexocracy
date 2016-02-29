@@ -54,7 +54,7 @@ namespace Hexocracy.Core
             r.sharedMaterial.color = data.color;
         }
 
-        public override ItemBox ToGameInstance()
+        protected override ItemBox OnGameInstanceInit()
         {
             var itemBox = go.AddComponent<ItemBox>();
             itemBox.Initialize(Player.NeutralPassive, data);

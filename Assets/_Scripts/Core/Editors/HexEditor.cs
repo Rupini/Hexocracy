@@ -8,7 +8,7 @@ using Hexocracy.CustomEditor;
 namespace Hexocracy.Core
 {
     [ExecuteInEditMode]
-    public class HexEditor : AbstractHex, IEditorBehaviour<Hex>
+    public class HexEditor : EditorBehaviour<Hex>
     {
         private const float DEFAULT_BASE_SCALE = 0.005f;
 
@@ -19,11 +19,12 @@ namespace Hexocracy.Core
         private Material defaultMaterial;
         private Material additionMaterial;
 
-        public override void SetIndex(Index2D index)
+        public Index2D Index { get; private set; }
+        private void SetIndex(Index2D index)
         {
-            base.SetIndex(index);
-            data.xIndex = Index.X;
-            data.yIndex = Index.Y;
+            Index = index;
+            data.xIndex = index.X;
+            data.yIndex = index.Y;
         }
 
         public void Initialize(Index2D index, Transform parent)
@@ -31,8 +32,6 @@ namespace Hexocracy.Core
             SetIndex(index);
             transform.SetParent(parent);
         }
-
-        public override void DefineCircum() { }
 
         private void Update()
         {
@@ -74,17 +73,13 @@ namespace Hexocracy.Core
             lastHasAddition = data.hasAddition;
         }
 
-        public void InitGameInstance()
-        {
-            ToGameInstance();
-        }
-
-        public Hex ToGameInstance()
+        protected override Hex OnGameInstanceInit()
         {
             var hex = go.AddComponent<Hex>();
             hex.Initialize(data);
             Destroy(this);
             return hex;
         }
+       
     }
 }

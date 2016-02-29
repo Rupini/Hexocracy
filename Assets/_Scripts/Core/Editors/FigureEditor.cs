@@ -43,7 +43,7 @@ namespace Hexocracy.Core
             r.sharedMaterial.color = data.color;
         }
 
-        public override Figure ToGameInstance()
+        protected override Figure OnGameInstanceInit()
         {
             FigureFactory.I.Create(go, data);
             GameObject.Destroy(this);

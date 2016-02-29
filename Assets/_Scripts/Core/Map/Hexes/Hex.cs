@@ -47,17 +47,27 @@ namespace Hexocracy.Core
         public Vector3 GroundCenter { get; private set; }
         #endregion
         #region Initialize
+
+        public int indexX;
+        public int indexY;
+        public int h;
+        public ContentType cType;
+
         public void Initialize(HexData data)
         {
             additions = new List<IHexAddition>();
             map = GameServices.Get<GameMap>();
             nihility = GameServices.Get<Nihility>();
 
+            indexX = data.xIndex;
+            indexY = data.yIndex;
+            h = data.height;
+
             SetIndex(new Index2D(data.xIndex, data.yIndex));
             H = data.height;
             t.localScale = new Vector3(t.localScale.x, data.scaleY, t.localScale.z);
 
-            GroundCenter = new Vector3(t.position.x, t.position.y + GetComponent<Collider>().bounds.size.y, t.position.z);
+            GroundCenter = new Vector3(t.position.x, t.position.y + r.bounds.size.y, t.position.z);
 
             //*!Crutch
             t.GetChild(0).gameObject.SetActive(true);
@@ -98,12 +108,16 @@ namespace Hexocracy.Core
         public void OnContentEntered(IContainable content)
         {
             Content = content;
+            cType = Content.Type;
         }
 
         public void OnContentLeft(IContainable content)
         {
             if (Content == content)
+            {
                 Content = EmptyContent.Get();
+                cType = Content.Type;
+            }
         }
 
         public bool HasFigure

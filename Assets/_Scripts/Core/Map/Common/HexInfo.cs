@@ -72,5 +72,10 @@ namespace Hexocracy.Core
         {
             return new Vector3(index.X * X_METRIC_K * A, height, index.Y * R);
         }
+
+        public static Index2D VectorToIndex(Vector3 vector)
+        {
+            return new Index2D((int)(vector.x / (X_METRIC_K * A)), (int)(vector.z / R));
+        }
     }
 }

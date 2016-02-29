@@ -10,7 +10,7 @@ namespace Hexocracy.Core
     {
         public GlobalItemSpawnerData data;
 
-        public override GlobalItemSpawner ToGameInstance()
+        protected override GlobalItemSpawner OnGameInstanceInit()
         {
             var itemSpawner = go.AddComponent<GlobalItemSpawner>();
             itemSpawner.Initialize(data);

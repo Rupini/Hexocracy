@@ -48,7 +48,7 @@ namespace Hexocracy.Core
             angle = data.jumpingAngle * Mathf.Deg2Rad;
             pathFinder = new DijkstraPathFinder(jumpUpHeight, jumpDownHeight);
             body = GetComponent<Rigidbody>();
-            Height = GetComponent<Collider>().bounds.size.y;
+            Height = r.bounds.size.y;
 
             DefineStartHex(0.5f * r.bounds.size.y);
 

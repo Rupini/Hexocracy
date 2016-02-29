@@ -60,7 +60,7 @@ namespace Hexocracy.CustomEditor
         {
             List<HexEditor> hexes = new List<HexEditor>();
 
-            foreach (var index in hex.CircumIndices)
+            foreach (var index in HexInfo.GetCircumIndices(hex.Index))
                 if (!hexMap.ContainsKey(index))
                 {
                     var builtHex = CreateHex(index);

@@ -43,19 +43,16 @@ namespace Hexocracy.Core
         {
             GameServices.Get<GameMap>().Initialize();
 
-            GameObjectUtility.FindObjectsOfInterfaceType<IEditorBehaviour>().ForEach(editor =>
-            {
-                if (editor.GetType() != typeof(HexEditor)) editor.InitGameInstance();
-            });
+            GameObjectUtility.FindObjectsOfInterfaceType<IEditorBehaviour>().ForEach(editor => editor.InitGameInstance());
 
             //var sw = new System.Diagnostics.Stopwatch();
             //sw.Start();
-            GameServices.Get<Nihility>().OnProcessComplete += OnProcessComplete;
-            GameServices.Get<Nihility>().ToProcess();
+            //GameServices.Get<Nihility>().OnProcessComplete += OnProcessComplete;
+            //GameServices.Get<Nihility>().ToProcess();
             //sw.Stop();
             //Debug.Log(sw.ElapsedMilliseconds);
 
-            TurnController.TurnFinished += OnRoundEnd;
+            //TurnController.TurnFinished += OnRoundEnd;
 
             TurnController.Start();
         }
@@ -81,8 +78,6 @@ namespace Hexocracy.Core
                     trans.GetComponent<MeshRenderer>().material.color = new Color(1, 0, 0);
                     balls.Add(go);
                 }
-
-
             }
         }
 
@@ -93,7 +88,7 @@ namespace Hexocracy.Core
                 var list = new List<Hex>();
                 var hex = GameServices.Get<GameMap>().GetAll().GetRandom();
 
-                foreach(var neighboor in hex.Neighbors)
+                foreach (var neighboor in hex.Neighbors)
                 {
                     list.Add(neighboor);
                     neighboor.Destroy();
