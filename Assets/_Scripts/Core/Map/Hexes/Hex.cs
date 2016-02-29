@@ -70,10 +70,10 @@ namespace Hexocracy.Core
             GroundCenter = new Vector3(t.position.x, t.position.y + r.bounds.size.y, t.position.z);
 
             //*!Crutch
-            t.GetChild(0).gameObject.SetActive(true);
+            //t.GetChild(0).gameObject.SetActive(true);
             if (data.hasAddition)
             {
-                t.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/ElementHex");
+                //t.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/ElementHex");
                 AddAddition(new ItemSpawner(data.addition));
             }
             //_

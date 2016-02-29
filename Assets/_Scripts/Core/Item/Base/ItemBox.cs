@@ -27,7 +27,7 @@ namespace Hexocracy
             Owner = owner;
 
             if (data.type == ItemType.Element)
-                Item = new Element(this, (ElementData) data);
+                Item = new Element(this, (ElementData)data);
             else
                 Item = new BombItem(this, (BombData)data);
 
@@ -39,7 +39,7 @@ namespace Hexocracy
 
             r.material.color = data.color;
 
-            var yOffset = !data.overrideOffsetK ? r.bounds.size.y : r.bounds.size.y * data.yOffsetK;
+            var yOffset = !data.overrideOffsetK ? r.bounds.size.y * 0.5f : r.bounds.size.y * data.yOffsetK;
 
             DefineStartHex(yOffset);
         }
