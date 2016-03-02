@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.HelpTools;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace Hexocracy.Core
         private FigureContainer container;
 
         private float angle;
-        private float g;
         private PathFinder pathFinder;
 
         private Rigidbody body;
@@ -36,7 +36,6 @@ namespace Hexocracy.Core
         protected override void Awake()
         {
             base.Awake();
-            g = -Physics.gravity.y;
         }
 
         public virtual void Initialize(FigureContainer container, FigureData data)
@@ -138,7 +137,7 @@ namespace Hexocracy.Core
             var p2 = GetJumpPoint(hex);
 
             float dt;
-            var v = GetVelocity(p1, p2, out dt);
+            var v = Kinematics.CalculateVelocity(p1, p2, angle, out dt);
 
             body.AddForceAtPosition(v, p1, ForceMode.VelocityChange);
             StartJump(dt);
@@ -224,33 +223,6 @@ namespace Hexocracy.Core
             EnterHex();
             OnHexLanded(currentHex, bounceHeight);
         }
-        #endregion
-        #region Kinemacics
-
-        private Vector3 GetVelocity(Vector3 p1, Vector3 p2, out float t)
-        {
-            Vector3 r = p2 - p1;
-
-            float dy = p2.y - p1.y;
-
-            float dx = Mathf.Sqrt(r.x * r.x + r.z * r.z);
-
-            t = Mathf.Sqrt(2 * (dx * Mathf.Tan(angle) - dy) / g);
-
-            float v0 = dx / (t * Mathf.Cos(angle));
-
-            r = new Vector3(r.x, dx * Mathf.Tan(angle), r.z);
-
-            return r.normalized * v0;
-        }
-
-        private Vector3 GetVelocity(float height, out float t)
-        {
-            float vy = Mathf.Sqrt(2 * height * g);
-            t = 2 * vy / g;
-
-            return new Vector3(0, vy, 0);
-        }
 
         private Vector3 GetJumpPoint(Hex hex)
         {
@@ -279,7 +251,7 @@ namespace Hexocracy.Core
         #region IContainable
 
         public override ContentType Type { get { return ContentType.Figure; } }
-       
+
         #endregion
     }
 }

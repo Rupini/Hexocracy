@@ -5,10 +5,7 @@ using System.Text;
 
 namespace Hexocracy.Core
 {
-    public class MapIslandModel
+    public class CannonProjectile
     {
-        public const int EXTERNAL_NIHILITY_INDEX = 0;
-
-
     }
 }

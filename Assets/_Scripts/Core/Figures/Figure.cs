@@ -145,7 +145,9 @@ namespace Hexocracy.Core
         {
             hp.CurrValue -= dmg;
             if (hp.CurrValue <= 0)
+            {
                 Destroy();
+            }
         }
 
         private int bombCD = 3;
