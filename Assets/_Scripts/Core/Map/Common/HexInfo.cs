@@ -53,6 +53,34 @@ namespace Hexocracy.Core
             }
         }
 
+        private static Vector3? _scale;
+        public static Vector3 Scale
+        {
+            get
+            {
+                if (_scale == null)
+                {
+                    _scale = Prefab.transform.localScale;
+                }
+
+                return _scale.Value;
+            }
+        }
+
+        private static float? _h;
+        public static float H
+        {
+            get
+            {
+                if (_h == null)
+                {
+                    _h = Prefab.GetComponent<MeshRenderer>().bounds.size.y;
+                }
+
+                return _h.Value;
+            }
+        }
+
         public static Index2D[] GetCircumIndices(Index2D centerIndex)
         {
             var circumIndices = new Index2D[] 

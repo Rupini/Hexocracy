@@ -10,8 +10,6 @@ namespace Hexocracy.Core
     [ExecuteInEditMode]
     public class HexEditor : EditorBehaviour<Hex>
     {
-        private const float DEFAULT_BASE_SCALE = 0.005f;
-
         public HexData data;
 
         private int lastHeight = 1;
@@ -44,7 +42,12 @@ namespace Hexocracy.Core
             if (lastHeight != data.height)
             {
                 lastHeight = data.height;
-                t.localScale = new Vector3(DEFAULT_BASE_SCALE, data.height * DEFAULT_BASE_SCALE, DEFAULT_BASE_SCALE);
+                t.localScale = new Vector3(HexInfo.Scale.x, data.height * HexInfo.Scale.y, HexInfo.Scale.z);
+
+                var position = t.position;
+                position.y = 0.5f * (r.bounds.size.y - HexInfo.H);
+                t.position = position;
+
                 data.scaleY = t.localScale.y;
             }
         }
@@ -65,7 +68,7 @@ namespace Hexocracy.Core
         {
             base.Awake();
             data.scaleY = t.localScale.y;
-            data.height = (int)(t.localScale.y / DEFAULT_BASE_SCALE);
+            data.height = (int)(t.localScale.y / HexInfo.Scale.y);
 
             defaultMaterial = Resources.Load<Material>("Models/Materials/hexDefaultMat");
             additionMaterial = Resources.Load<Material>("Models/Materials/hexAdditionMat");

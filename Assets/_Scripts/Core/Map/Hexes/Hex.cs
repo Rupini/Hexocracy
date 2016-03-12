@@ -48,10 +48,10 @@ namespace Hexocracy.Core
         #endregion
         #region Initialize
 
-        public int indexX;
-        public int indexY;
-        public int h;
-        public ContentType cType;
+        //public int indexX;
+        //public int indexY;
+        //public int h;
+        //public ContentType cType;
 
         public void Initialize(HexData data)
         {
@@ -59,24 +59,20 @@ namespace Hexocracy.Core
             map = GameServices.Get<GameMap>();
             nihility = GameServices.Get<Nihility>();
 
-            indexX = data.xIndex;
-            indexY = data.yIndex;
-            h = data.height;
+            //indexX = data.xIndex;
+            //indexY = data.yIndex;
+            //h = data.height;
 
             SetIndex(new Index2D(data.xIndex, data.yIndex));
             H = data.height;
             t.localScale = new Vector3(t.localScale.x, data.scaleY, t.localScale.z);
 
-            GroundCenter = new Vector3(t.position.x, t.position.y + r.bounds.size.y, t.position.z);
+            GroundCenter = new Vector3(t.position.x, t.position.y + r.bounds.size.y * 0.5f, t.position.z);
 
-            //*!Crutch
-            //t.GetChild(0).gameObject.SetActive(true);
             if (data.hasAddition)
             {
-                //t.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures/ElementHex");
                 AddAddition(new ItemSpawner(data.addition));
             }
-            //_
 
             Content = EmptyContent.Get();
         }
@@ -108,7 +104,7 @@ namespace Hexocracy.Core
         public void OnContentEntered(IContainable content)
         {
             Content = content;
-            cType = Content.Type;
+            //cType = Content.Type;
         }
 
         public void OnContentLeft(IContainable content)
@@ -116,7 +112,7 @@ namespace Hexocracy.Core
             if (Content == content)
             {
                 Content = EmptyContent.Get();
-                cType = Content.Type;
+                //cType = Content.Type;
             }
         }
 
