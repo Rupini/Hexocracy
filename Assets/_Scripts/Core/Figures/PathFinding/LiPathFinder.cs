@@ -6,8 +6,6 @@ namespace Hexocracy.Core
 {
     public class LiPathFinder : PathFinder
     {
-       
-
         private const int OBSTACLE_FLAG = -1;
         private const int UNDEFINED_FlAG = 0;
         private const int ORIGIN_FLAG = 1;

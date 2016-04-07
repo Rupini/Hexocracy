@@ -7,6 +7,8 @@ using Hexocracy.CustomEditor;
 
 namespace Hexocracy.Core
 {
+
+    [RawPrototype]
     [ExecuteInEditMode]
     public class HexEditor : EditorBehaviour<Hex>
     {

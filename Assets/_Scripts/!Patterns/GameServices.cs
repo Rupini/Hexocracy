@@ -8,8 +8,8 @@ namespace Hexocracy
 {
     public class GameServices
     {
-        private const string MAIN_NAMESPACE = "Hexocracy";
-        private const string POST_CTOR_METHOD = "post_ctor";
+        #region Static
+        private const string POST_CTOR_METHOD = "r_post_ctor";
         private static GameServices instance;
 
         public static Type[] GetHexocracyTypes()
@@ -38,7 +38,9 @@ namespace Hexocracy
                 return null;
             }
         }
+        #endregion
 
+        #region Instance
         private Dictionary<int, object> services;
         private Type[] types;
 
@@ -49,7 +51,7 @@ namespace Hexocracy
 
         private void InitializeAllServices()
         {
-            types = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.Namespace.Contains(MAIN_NAMESPACE)).ToArray();
+            types = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.Namespace.Contains(ProjectInfo.MAIN_NAMESPACE)).ToArray();
             
             var serviceTypes = types.Where(type => type.IsDefined(typeof(GameServiceAttribute), true));
             foreach (var serviceType in serviceTypes)
@@ -70,5 +72,7 @@ namespace Hexocracy
                 }
             }
         }
+
+        #endregion
     }
 }

@@ -7,6 +7,12 @@ namespace Hexocracy.Core
 {
     public abstract class TurnListenerBehaviour : CachedMonoBehaviour
     {
+        public virtual void Destroy()
+        {
+            TurnController.TurnStarted -= OnTurnStarted;
+            TurnController.TurnFinished -= OnTurnFinished;
+        }
+
         protected override void Awake()
         {
             base.Awake();

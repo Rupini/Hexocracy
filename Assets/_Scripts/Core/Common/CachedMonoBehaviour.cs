@@ -11,6 +11,7 @@ namespace Hexocracy
         public Transform t { get; protected set; }
         public GameObject go { get; protected set; }
         public Renderer r { get; protected set; }
+
         protected virtual void Awake()
         {
             t = transform;

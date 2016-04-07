@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class Hex : AbstractHex //,IPFEdge
     {
         public static implicit operator int(Hex hex)
@@ -24,6 +25,7 @@ namespace Hexocracy.Core
 
         public List<Hex> Neighbors { get; protected set; }
 
+        [RawPrototype]
         public int FindFlag
         {
             get
@@ -53,6 +55,7 @@ namespace Hexocracy.Core
         //public int h;
         //public ContentType cType;
 
+        [RawPrototype]
         public void Initialize(HexData data)
         {
             additions = new List<IHexAddition>();
@@ -158,7 +161,7 @@ namespace Hexocracy.Core
 
         public override int GetHashCode()
         {
-            return Index.GetHashCode();
+            return Index;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Hexocracy
             Owner = Player.NeutralPassive;
         }
 
+        [RawPrototype]
         public void Initialize(Player owner, ItemData data)
         {
             Owner = owner;

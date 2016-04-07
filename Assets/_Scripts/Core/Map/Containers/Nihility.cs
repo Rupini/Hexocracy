@@ -27,7 +27,7 @@ namespace Hexocracy.Core
             undefineds = new Dictionary<int, NullHex>();
         }
 
-        private void post_ctor()
+        private void r_post_ctor()
         {
             map = GameServices.Get<GameMap>();
             map.OnAdd += OnHexAdded;

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class Player
     {
         #region Static
@@ -22,6 +23,7 @@ namespace Hexocracy.Core
         }
 
         #endregion
+
         #region Builder
 
         public static class Builder
@@ -62,9 +64,9 @@ namespace Hexocracy.Core
 
         #endregion
 
-        private Dictionary<int, Player> enemies = new Dictionary<int, Player>();
-
-        private Dictionary<int, Player> allies = new Dictionary<int, Player>();
+        #region Instance
+        private Dictionary<int, Player> enemies;
+        private Dictionary<int, Player> allies;
 
         public int Index { get; private set; }
 
@@ -74,6 +76,8 @@ namespace Hexocracy.Core
 
         private Player(string name, int index)
         {
+            enemies = new Dictionary<int,Player>();
+            allies = new Dictionary<int,Player>();
             Name = name;
             Index = index;
         }
@@ -83,6 +87,7 @@ namespace Hexocracy.Core
             return enemies.ContainsKey(player.Index);
         }
 
+        [RawPrototype]
         public void SwitchActiveState(bool active)
         {
             if (active)
@@ -110,6 +115,6 @@ namespace Hexocracy.Core
         {
             return Index + " - " + Name;
         }
-
+        #endregion
     }
 }

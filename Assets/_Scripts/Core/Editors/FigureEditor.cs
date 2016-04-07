@@ -8,6 +8,7 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class FigureEditor : EditorBehaviour<Figure>
     {
         public FigureData data;
@@ -32,7 +33,7 @@ namespace Hexocracy.Core
                 ChangeColor();
             }
         }
-
+        
         private void ChangeColor()
         {
             if (previusOwner == 0)

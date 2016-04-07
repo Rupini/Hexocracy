@@ -51,6 +51,7 @@ namespace Hexocracy.Core
             }
         }
 
+        [RawPrototype]
         private void Spawn()
         {
             if (owner.Content.Type == ContentType.Empty)

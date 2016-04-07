@@ -8,10 +8,10 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+
+    [RawPrototype]
     public abstract class BouncingObject : MapObject
     {
-        private FigureContainer container;
-
         private float angle;
         private PathFinder pathFinder;
 
@@ -40,7 +40,6 @@ namespace Hexocracy.Core
 
         public virtual void Initialize(FigureContainer container, FigureData data)
         {
-            this.container = container;
             jumpUpHeight = data.jumpUpHeight;
             jumpDownHeight = data.jumpDownHeight;
 

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class FigureFactory
     {
         public static FigureFactory I { get; private set; }

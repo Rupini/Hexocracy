@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class FigureContainer
     {
         private Dictionary<int, Figure> figures;

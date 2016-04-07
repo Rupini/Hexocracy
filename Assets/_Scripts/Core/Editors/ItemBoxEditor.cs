@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+
+    [RawPrototype]
     public class ItemBoxEditor : EditorBehaviour<ItemBox>
     {
         public ItemType type;

@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class InputController : MonoBehaviour
     {
         private static InputController _i;

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace Hexocracy.View
 {
+    [RawPrototype]
     public class BitchController : MonoBehaviour
     {
         private Text text;

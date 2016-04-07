@@ -27,7 +27,7 @@ namespace Hexocracy
         {
             this.x = x;
             this.y = y;
-            hashCode = x + y * 1000;
+            hashCode = x + y * Y_FACTOR;
         }
 
         public override int GetHashCode()

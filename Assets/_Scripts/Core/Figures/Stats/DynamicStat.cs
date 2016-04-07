@@ -8,6 +8,7 @@ namespace Hexocracy
     public class DynamicStat : Stat
     {
         private float _currValue;
+
         public float CurrValue
         {
             get

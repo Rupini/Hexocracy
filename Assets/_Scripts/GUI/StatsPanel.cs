@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace Hexocracy.View
 {
+    [RawPrototype]
     public class StatsPanel : MonoBehaviour
     {
         private Figure target;

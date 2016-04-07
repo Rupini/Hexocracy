@@ -21,10 +21,9 @@ namespace Hexocracy.Core
 
         public bool Destroyed { get; protected set; }
 
-        public virtual void Destroy()
+        public override void Destroy()
         {
-            TurnController.TurnStarted -= OnTurnStarted;
-            TurnController.TurnFinished -= OnTurnFinished;
+            base.Destroy();
 
             LeaveHex();
 

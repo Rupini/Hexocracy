@@ -53,6 +53,7 @@ namespace Hexocracy.Core
             r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
         }
 
+        [RawPrototype]
         public override void Initialize(FigureContainer container, FigureData data)
         {
             base.Initialize(container, data);
@@ -123,6 +124,7 @@ namespace Hexocracy.Core
 
         public float Initiative { get { return initiative; } }
 
+        [RawPrototype]
         public void AddElement(Element element)
         {
             statHolder[(StatType)element.Kind].BaseValue += element.Count;
@@ -150,9 +152,12 @@ namespace Hexocracy.Core
             }
         }
 
+        [RawPrototype]
         private int bombCD = 3;
+        [RawPrototype]
         public int bombCurrCD = 0;
 
+        [RawPrototype]
         public void CreateBomb()
         {
             if (bombCurrCD == 0)
@@ -222,8 +227,11 @@ namespace Hexocracy.Core
         #region IActivable
 
         public bool Active { get; protected set; }
+
+        [RawPrototype]
         private Color defaultColor;
 
+        [RawPrototype]
         public void Deactivate()
         {
             Active = false;
@@ -234,6 +242,7 @@ namespace Hexocracy.Core
             }
         }
 
+        [RawPrototype]
         public void Activate()
         {
             Active = true;

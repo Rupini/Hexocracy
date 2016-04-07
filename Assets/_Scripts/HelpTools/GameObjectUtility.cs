@@ -7,29 +7,8 @@ using UnityEngine;
 
 namespace Hexocracy.HelpTools
 {
-    public class GameObjectUtility
+    public static class GameObjectUtility
     {
-
-        //private List<Type> monoTypes;
-
-        //private GameObjectUtility()
-        //{
-        //    monoTypes = GameServices.GetHexocracyTypes().Where(type =>
-        //        {
-        //            Type currType = type.BaseType;
-        //            while (currType != typeof(object))
-        //            {
-        //                if (currType == typeof(MonoBehaviour))
-        //                {
-        //                    return true;
-        //                }
-        //                currType = currType.BaseType;
-        //            }
-
-        //            return false;
-        //        }).ToList();
-        //}
-
         public static List<T> FindObjectsOfInterfaceType<T>()
         {
             var list = new List<T>();
