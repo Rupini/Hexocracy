@@ -12,6 +12,7 @@ namespace Hexocracy.Core
     [RawPrototype]
     public abstract class BouncingObject : MapObject
     {
+        #region Defenition
         private float angle;
         private PathFinder pathFinder;
 
@@ -32,6 +33,8 @@ namespace Hexocracy.Core
 
         public abstract float AP { get; protected set; }
 
+        #endregion
+
         #region Initialize
         protected override void Awake()
         {
@@ -50,10 +53,11 @@ namespace Hexocracy.Core
 
             DefineStartHex(0.5f * r.bounds.size.y);
 
-            container.OnFigureCreated((Figure)this);
+            container.Add((Figure)this);
         }
 
         #endregion
+
         #region MoveCommand
 
         public MoveResult MoveTo(Hex hex, bool forced)
@@ -101,7 +105,9 @@ namespace Hexocracy.Core
                 targetCondition: (hex) => { return !hex.HasFigure; });
 
             if (currPath.Useful)
+            {
                 ExecuteMove();
+            }
             else
             {
                 Debug.Log("oops!");
@@ -126,6 +132,7 @@ namespace Hexocracy.Core
             if (currPath.Next()) JumpToNext(currPath.CurrentHex);
         }
         #endregion
+
         #region JumpControl
         private void JumpToNext(Hex hex)
         {
@@ -238,6 +245,7 @@ namespace Hexocracy.Core
         }
 
         #endregion
+
         #region Callbacks
         protected abstract void OnForcedMovePenalti();
 
@@ -247,6 +255,7 @@ namespace Hexocracy.Core
 
         protected abstract void OnItemBoxContact(IContainable item);
         #endregion
+
         #region IContainable
 
         public override ContentType Type { get { return ContentType.Figure; } }

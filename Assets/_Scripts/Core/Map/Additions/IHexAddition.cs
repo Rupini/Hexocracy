@@ -9,5 +9,8 @@ namespace Hexocracy.Core
     {
         void Attach(Hex target);
         void Disattach();
+
+        void OnTurnUpdate(bool isNewRound);
+
     }
 }

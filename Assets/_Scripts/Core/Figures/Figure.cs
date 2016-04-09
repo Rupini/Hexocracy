@@ -9,7 +9,7 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    public class Figure : BouncingObject, IActivableObject, IAttacker
+    public class Figure : BouncingObject, IActor, IAttacker
     {
         #region Definition
         protected StatsHolder statHolder;
@@ -170,7 +170,7 @@ namespace Hexocracy.Core
                 bomb.overrideOffsetK = true;
                 bomb.yOffsetK = 0;
 
-                ItemFactory.I.Create(bomb, currentHex, Owner);
+                GS.Get<ItemFactory>().Create(bomb, currentHex, Owner);
             }
         }
 

@@ -6,13 +6,15 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
+    
     public class Hex : AbstractHex //,IPFEdge
     {
+        #region Static
         public static implicit operator int(Hex hex)
         {
             return hex.EntityID;
         }
+        #endregion
 
         #region Definition
 
@@ -48,23 +50,15 @@ namespace Hexocracy.Core
 
         public Vector3 GroundCenter { get; private set; }
         #endregion
-        #region Initialize
 
-        //public int indexX;
-        //public int indexY;
-        //public int h;
-        //public ContentType cType;
+        #region Initialize
 
         [RawPrototype]
         public void Initialize(HexData data)
         {
             additions = new List<IHexAddition>();
-            map = GameServices.Get<GameMap>();
-            nihility = GameServices.Get<Nihility>();
-
-            //indexX = data.xIndex;
-            //indexY = data.yIndex;
-            //h = data.height;
+            map = GS.Get<GameMap>();
+            nihility = GS.Get<Nihility>();
 
             SetIndex(new Index2D(data.xIndex, data.yIndex));
             H = data.height;
@@ -74,12 +68,20 @@ namespace Hexocracy.Core
 
             if (data.hasAddition)
             {
-                AddAddition(new ItemSpawner(data.addition));
+                AddAddition(new ElementSpawner(data.addition));
             }
 
             Content = EmptyContent.Get();
         }
         #endregion
+
+        protected override void OnTurnStarted(bool isNewRound)
+        {
+            foreach(var addition in additions)
+            {
+                addition.OnTurnUpdate(isNewRound);
+            }
+        }
 
         public override void DefineCircum()
         {
@@ -104,18 +106,18 @@ namespace Hexocracy.Core
             }
         }
 
+        [RawPrototype]
         public void OnContentEntered(IContainable content)
         {
             Content = content;
-            //cType = Content.Type;
         }
 
+        [RawPrototype]
         public void OnContentLeft(IContainable content)
         {
             if (Content == content)
             {
                 Content = EmptyContent.Get();
-                //cType = Content.Type;
             }
         }
 
@@ -132,16 +134,12 @@ namespace Hexocracy.Core
             return dx != 2 && dx + dy == 2;
         }
 
+        [RawPrototype]
         public void ChangeColor(Color color)
         {
             GetComponentInChildren<SpriteRenderer>().color = color;
         }
-
-        public void PaintNeighbors(Color color)
-        {
-            Neighbors.ForEach((h) => { h.ChangeColor(color); });
-        }
-
+        
         private void AddAddition(IHexAddition addition)
         {
             additions.Add(addition);

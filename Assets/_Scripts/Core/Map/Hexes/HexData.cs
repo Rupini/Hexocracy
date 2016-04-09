@@ -30,7 +30,7 @@ namespace Hexocracy.Core
             [Condition(true, "type", "Element")]
             public ElementKind kind;
 
-            public int count;
+            public int capacity;
             public int minRespawnTime;
             public int maxRespawnTime;
             public bool respawnOnStart;

@@ -41,10 +41,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
     agents:
-    - minCountPerTurn: .200000003
-      maxCountPerTurn: .400000006
-      limitCount: 1
-      limitDistanceFromCenter: 1
+    - originHex: {fileID: 0}
+      minCountPerTurn: 1
+      maxCountPerTurn: 1.39999998
+      limitCount: 0
+      limitDistanceFromCenter: 2
       itemType: 1
       element:
         capacity: 1
@@ -53,8 +54,9 @@ MonoBehaviour:
         yOffsetK: 0
         color: {r: 0, g: 0, b: 0, a: 0}
         kind: 3
-    - minCountPerTurn: 3
-      maxCountPerTurn: 5
+    - originHex: {fileID: 0}
+      minCountPerTurn: 0
+      maxCountPerTurn: 0
       limitCount: 20
       limitDistanceFromCenter: 2
       itemType: 1

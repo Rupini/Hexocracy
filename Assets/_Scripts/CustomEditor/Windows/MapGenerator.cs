@@ -75,8 +75,11 @@ namespace Hexocracy.CustomEditor
         private HexEditor CreateHex(Index2D index)
         {
             var hex = ((HexEditor)GameObject.Instantiate(prototype, HexInfo.IndexToVector(index), new Quaternion()));
-            hexMap.Add(index, hex);
+            
             hex.Initialize(index, container);
+            hex.go.name = "Hex " + hex.Index;
+            hexMap.Add(index, hex);
+            
             return hex;
         }
     }

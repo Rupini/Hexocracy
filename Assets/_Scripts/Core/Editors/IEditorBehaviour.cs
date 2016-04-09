@@ -5,13 +5,10 @@ using System.Text;
 
 namespace Hexocracy.Core
 {
-    public interface IEditorBehaviour
-    {
-        void InitGameInstance();
-    }
-
-    public interface IEditorBehaviour<T> : IEditorBehaviour
+    public interface IEditorBehaviour<T> where T : IEntity
     {
         T ToGameInstance();
+
+        T GameInstance { get; }
     }
 }

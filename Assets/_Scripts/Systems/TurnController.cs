@@ -1,99 +1,132 @@
-﻿using System;
+﻿using Hexocracy.Core;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-namespace Hexocracy.Core
+namespace Hexocracy.Systems
 {
+    [GameService(GameServiceType.Contoller)]
     public class TurnController
     {
-        #region Static
-        public static event Action<bool> TurnStarted = delegate { };
-        public static event Action<bool> TurnFinished = delegate { };
-        private static TurnController instance;
+        #region Defenition
+        private ActorContainer container;
 
-        public static void Initialize(FigureContainer container)
-        {
-            instance = new TurnController(container);
-        }
-
-        public static void Start()
-        {
-            instance.Next(true);
-        }
-
-        public static void OnPlayerFinishedTurn()
-        {
-            var roundFinished = instance.currentFigureIndex == instance.figures.Count;
-            TurnFinished(roundFinished);
-            instance.EndTurn(roundFinished);
-        }
-        #endregion
-
-        private FigureContainer container;
-
-        private List<Figure> figures;
+        private List<IActor> actors;
         private int currentFigureIndex;
-        private Figure pickedFigure;
+        private IActor pickedActor;
 
         private int turnNumber;
         private int currRound;
 
-        private bool GG = false;
+        private bool GG;
 
-        private TurnController(FigureContainer container)
+        private bool alreadyStarted;
+        #endregion
+
+        #region Initialize
+        private TurnController() { }
+
+        private void r_post_ctor()
         {
-            this.container = container;
+            container = GS.Get<ActorContainer>();
         }
+        #endregion
+
+        #region API
+
+        public event Action<bool> TurnStarted = delegate { };
+        public event Action<bool> TurnFinished = delegate { };
+
+        public void Start()
+        {
+            if(!alreadyStarted)
+            {
+                alreadyStarted = true;
+                Next(true);
+            }
+            else
+            {
+                throw new Exception("Game already started!");
+            }
+        }
+
+        public void OnPlayerFinishedTurn()
+        {
+            var roundFinished = currentFigureIndex == actors.Count;
+            TurnFinished(roundFinished);
+            EndTurn(roundFinished);
+        }
+
+        #endregion
+
+        #region IMP
 
         private void Next(bool newRound)
         {
             TurnStarted(newRound);
 
-            if (newRound) NextRound();
+            if (newRound)
+            {
+                NextRound();
+            }
 
             if (!GG)
+            {
                 NextTurn();
+            }
             else
+            {
                 Debug.Log("GG!");
+            }
         }
 
+        [RawPrototype]
         private void NextRound()
         {
-            figures = container.GetFigures();
-            if (figures.Count > 0)
+            actors = container.GetAll();
+
+            if (actors.Count > 0)
             {
-                figures.Sort((f1, f2) => (int)f2.Initiative - (int)f1.Initiative);
+                //actors.Sort((f1, f2) => (int)f2.Initiative - (int)f1.Initiative);
                 currentFigureIndex = -1;
             }
             else
+            {
                 GG = true;
+            }
         }
 
         private void NextTurn()
         {
-            pickedFigure = null;
+            pickedActor = null;
 
-            while (pickedFigure == null && currentFigureIndex + 1 < figures.Count)
+            while (pickedActor == null && currentFigureIndex + 1 < actors.Count)
             {
                 currentFigureIndex++;
-                pickedFigure = figures[currentFigureIndex];
+
+                if (!actors[currentFigureIndex].Destroyed)
+                {
+                    pickedActor = actors[currentFigureIndex];
+                }
             }
 
-            if (pickedFigure == null)
+            if (pickedActor == null)
             {
                 TurnFinished(true);
                 Next(true);
             }
             else
-                pickedFigure.Activate();
+            {
+                pickedActor.Activate();
+            }
         }
 
         private void EndTurn(bool roundFinished)
         {
-            pickedFigure.Deactivate();
+            pickedActor.Deactivate();
             Next(roundFinished);
         }
+
+        #endregion
     }
 }

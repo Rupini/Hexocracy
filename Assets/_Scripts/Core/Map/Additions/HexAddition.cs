@@ -21,9 +21,11 @@ namespace Hexocracy.Core
             OnDisattach();
         }
 
-        protected abstract void OnAttach(Hex target);
+        protected virtual void OnAttach(Hex target) { }
 
-        protected abstract void OnDisattach();
-       
+        protected virtual void OnDisattach() { }
+
+        public virtual void OnTurnUpdate(bool isNewRound) { }
+
     }
 }

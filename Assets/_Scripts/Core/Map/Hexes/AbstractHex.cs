@@ -7,7 +7,8 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    public abstract class AbstractHex : CachedMonoBehaviour, IHex
+    [RawPrototype]
+    public abstract class AbstractHex : TurnListenerBehaviour, IHex
     {
         #region IEntity
 
@@ -17,14 +18,16 @@ namespace Hexocracy.Core
 
         public bool Destroyed { get; private set; }
 
-        public void Destroy()
+        public override void Destroy()
         {
+            base.Destroy();
             Destroy(go);
             Destroyed = true;
             OnDestroy();
         }
 
         #endregion
+
         #region IHex
 
         public bool Defined { get { return true; } }

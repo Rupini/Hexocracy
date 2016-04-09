@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Hexocracy.Systems;
 
 namespace Hexocracy.Core
 {
@@ -9,18 +6,18 @@ namespace Hexocracy.Core
     {
         public virtual void Destroy()
         {
-            TurnController.TurnStarted -= OnTurnStarted;
-            TurnController.TurnFinished -= OnTurnFinished;
+            GS.Get<TurnController>().TurnStarted -= OnTurnStarted;
+            GS.Get<TurnController>().TurnFinished -= OnTurnFinished;
         }
 
         protected override void Awake()
         {
             base.Awake();
-            TurnController.TurnStarted += OnTurnStarted;
-            TurnController.TurnFinished += OnTurnFinished;
+            GS.Get<TurnController>().TurnStarted += OnTurnStarted;
+            GS.Get<TurnController>().TurnFinished += OnTurnFinished;
         }
 
-        protected virtual void OnTurnStarted(bool newRound) { }
+        protected virtual void OnTurnStarted(bool isNewRound) { }
 
         protected virtual void OnTurnFinished(bool roundFinished) { }
     }

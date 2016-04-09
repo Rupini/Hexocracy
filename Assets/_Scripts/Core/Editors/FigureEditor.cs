@@ -46,8 +46,10 @@ namespace Hexocracy.Core
 
         protected override Figure OnGameInstanceInit()
         {
-            FigureFactory.I.Create(go, data);
+            GS.Get<FigureFactory>().Create(go, data);
+            
             GameObject.Destroy(this);
+            
             return go.GetComponent<Figure>();
         }
     }

@@ -51,8 +51,8 @@ namespace Hexocracy.Core
 
         public void DefineCircum()
         {
-            var nihility = GameServices.Get<Nihility>();
-            var map = GameServices.Get<GameMap>();
+            var nihility = GS.Get<Nihility>();
+            var map = GS.Get<GameMap>();
             Circum = new IHex[6];
 
             for (int i = 0; i < CircumIndices.Length; i++)

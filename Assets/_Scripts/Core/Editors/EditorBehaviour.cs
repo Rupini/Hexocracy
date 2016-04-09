@@ -3,26 +3,30 @@
 namespace Hexocracy.Core
 {
     [ExecuteInEditMode]
-    public abstract class EditorBehaviour<T> : CachedMonoBehaviour, IEditorBehaviour<T>
+    public abstract class EditorBehaviour<T> : CachedMonoBehaviour, IEditorBehaviour<T> where T : IEntity
     {
         protected bool gameInstanceInited;
 
         protected abstract T OnGameInstanceInit();
 
-        public void InitGameInstance()
-        {
-            ToGameInstance();
-        }
-
         public T ToGameInstance()
         {
-            if(!gameInstanceInited)
+            if (!gameInstanceInited)
             {
                 gameInstanceInited = true;
-                return OnGameInstanceInit();
+                GameInstance = OnGameInstanceInit();
+                return GameInstance;
             }
 
             return default(T);
         }
+
+        public IEntity ToGameEntity()
+        {
+            return ToGameInstance();
+        }
+
+        public T GameInstance { get; protected set; }
+
     }
 }

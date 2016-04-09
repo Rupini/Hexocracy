@@ -20,6 +20,7 @@ namespace Hexocracy.Core
         private Material additionMaterial;
 
         public Index2D Index { get; private set; }
+
         private void SetIndex(Index2D index)
         {
             Index = index;

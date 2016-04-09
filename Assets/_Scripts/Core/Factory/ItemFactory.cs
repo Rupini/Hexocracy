@@ -8,20 +8,10 @@ using URandom = UnityEngine.Random;
 namespace Hexocracy.Core
 {
     [RawPrototype]
+    [GameService(GameServiceType.Factory)]
     public class ItemFactory
     {
-        private static ItemFactory _i;
-        public static ItemFactory I
-        {
-            get
-            {
-                if (_i == null)
-                {
-                    _i = new ItemFactory();
-                }
-                return _i;
-            }
-        }
+        private ItemFactory() { }
 
         public ItemBox Create(ItemData data, Hex hex)
         {

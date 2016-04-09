@@ -1,11 +1,8 @@
-﻿using Hexocracy.View;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Hexocracy.Core;
+using Hexocracy.View;
 using UnityEngine;
 
-namespace Hexocracy.Core
+namespace Hexocracy.Systems
 {
     [RawPrototype]
     public class InputController : MonoBehaviour
@@ -39,7 +36,7 @@ namespace Hexocracy.Core
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                TurnController.OnPlayerFinishedTurn();
+                GS.Get<TurnController>().OnPlayerFinishedTurn();
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -88,7 +85,7 @@ namespace Hexocracy.Core
                 }
                 else
                 {
-                    Instantiate(Resources.Load<BitchController>("Prefabs/Play/Msg")).Initialize(25, 1, 2, 2, 
+                    Instantiate(Resources.Load<DummyMsgSpawner>("Prefabs/Play/Msg")).Initialize(25, 1, 2, 2, 
                         "Bomb kaking in CD! Sry Bitch! Wait " + selectedFigure.bombCurrCD + " nah!", Color.red);
                 }
             }

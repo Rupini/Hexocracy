@@ -2,32 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace Hexocracy.Core
 {
     [RawPrototype]
-    public class FigureContainer
+    [GameService(GameServiceType.Container)]
+    public class FigureContainer : EntityContainer<Figure>
     {
-        private Dictionary<int, Figure> figures;
+        private FigureContainer() { }
 
-        public FigureContainer()
+        public override void InitializeContent()
         {
-            figures = new Dictionary<int, Figure>();
-        }
+            var editorFigures = GameObject.FindObjectsOfType<FigureEditor>().ToList();
+            editorFigures.ForEach(editorFigure =>
+            {
+                var figure = editorFigure.ToGameInstance();
+                entities[figure.EntityID] = figure;
+            });
 
-        public void OnFigureCreated(Figure figure)
-        {
-            figures[figure.GetInstanceID()] = figure;
-        }
-
-        public void OnFigureRemoved(Figure figure)
-        {
-            figures.Remove(figure.GetInstanceID());
-        }
-
-        public List<Figure> GetFigures()
-        {
-            return figures.Values.ToList();
+            base.InitializeContent();
         }
     }
 }
