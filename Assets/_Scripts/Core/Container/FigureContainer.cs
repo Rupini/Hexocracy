@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
     [GameService(GameServiceType.Container)]
     public class FigureContainer : EntityContainer<Figure>
     {
@@ -22,6 +21,16 @@ namespace Hexocracy.Core
             });
 
             base.InitializeContent();
+        }
+
+        public override void Add(IEnumerable<Figure> entityCollection)
+        {
+            foreach (var entity in entityCollection)
+            {
+                entity.OnDestroy += entityFigure => Remove((Figure)entityFigure);
+            }
+
+            base.Add(entityCollection);
         }
     }
 }

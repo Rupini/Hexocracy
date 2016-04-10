@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using UnityEngine;
 
 namespace Hexocracy
 {
@@ -10,6 +11,8 @@ namespace Hexocracy
     {
         #region Static
         private const string POST_CTOR_METHOD = "r_post_ctor";
+        private const string MONO_CTOR_METHOD = "r_mono_ctor";
+
         private static GS instance;
 
         public static Type[] GetHexocracyTypes()
@@ -41,6 +44,7 @@ namespace Hexocracy
         #endregion
 
         #region Instance
+
         private Dictionary<int, object> services;
         private Type[] types;
 
@@ -54,10 +58,19 @@ namespace Hexocracy
             types = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.Namespace.Contains(ProjectInfo.MAIN_NAMESPACE)).ToArray();
             
             var serviceTypes = types.Where(type => type.IsDefined(typeof(GameServiceAttribute), true));
+            
             foreach (var serviceType in serviceTypes)
             {
-                var constructor = serviceType.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
-                services[serviceType.GetHashCode()] = constructor.Invoke(new Type[0]);
+                if (!IsMonoBehaviour(serviceType))
+                {
+                    var constructor = serviceType.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[0], null);
+                    services[serviceType.GetHashCode()] = constructor.Invoke(new object[0]);
+                }
+                else
+                {
+                    var constructor = serviceType.GetMethod(MONO_CTOR_METHOD, BindingFlags.NonPublic | BindingFlags.Static);
+                    services[serviceType.GetHashCode()] = constructor.Invoke(null, new object[0]);
+                }
             }
         }
 
@@ -71,6 +84,24 @@ namespace Hexocracy
                     method.Invoke(service, null);
                 }
             }
+        }
+
+        private bool IsMonoBehaviour(Type type)
+        {
+            var chekedType = type;
+            while(chekedType != null)
+            {
+                if(chekedType == typeof(MonoBehaviour))
+                {
+                    return true;
+                }
+                else
+                {
+                    chekedType = chekedType.BaseType;
+                }
+            }
+
+            return false;
         }
 
         #endregion

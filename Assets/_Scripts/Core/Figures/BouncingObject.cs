@@ -41,7 +41,7 @@ namespace Hexocracy.Core
             base.Awake();
         }
 
-        public virtual void Initialize(FigureContainer container, FigureData data)
+        public virtual void Initialize(FigureData data)
         {
             jumpUpHeight = data.jumpUpHeight;
             jumpDownHeight = data.jumpDownHeight;
@@ -53,7 +53,7 @@ namespace Hexocracy.Core
 
             DefineStartHex(0.5f * r.bounds.size.y);
 
-            container.Add((Figure)this);
+            
         }
 
         #endregion
@@ -213,7 +213,7 @@ namespace Hexocracy.Core
                     }
                     break;
                 case ContentType.Item:
-                    OnItemBoxContact(currentHex.Content);
+                    OnContentContact(currentHex.Content);
                     LandedOnHex(bounceHeight);
                     break;
             }
@@ -253,7 +253,7 @@ namespace Hexocracy.Core
 
         protected abstract void OnHexLanded(Hex hex, int bounceHeight);
 
-        protected abstract void OnItemBoxContact(IContainable item);
+        protected abstract void OnContentContact(IContainable item);
         #endregion
 
         #region IContainable

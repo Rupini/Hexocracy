@@ -11,61 +11,82 @@ namespace Hexocracy.Core
     public class Player
     {
         #region Static
-        private static List<Player> players = new List<Player>();
+
+        public static implicit operator int(Player player)
+        {
+            return player.Index;
+        }
+
+
+        private static Dictionary<int, Player> players;
         public static Player NeutralPassive { get; private set; }
         public static Player NeutralAggressive { get; private set; }
 
-        public static Player GetByIndex(int index)
+        public static List<Player> GetAll
         {
-            if (index < players.Count)
-                return players[index];
-            else
-                return null;
+            get
+            {
+                return players.Values.ToList();
+            }
         }
 
-        #endregion
-
-        #region Builder
-
-        public static class Builder
+        public static Player GetByIndex(int index)
         {
-            public static List<Player> Build(string[] names, int[][] enemies, int[][] allies)
+            if (players.ContainsKey(index))
             {
-                NeutralPassive = new Player("Neutral Passive", -1);
-                NeutralAggressive = new Player("Neutral Aggressive", -2);
+                return players[index];
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-                int n = 0;
-                foreach (var name in names)
+        public static void Initialize(List<PlayerData> playersData)
+        {
+            players = new Dictionary<int, Player>();
+
+            NeutralPassive = new Player() { Index = -1, Name = "Neutral Passive" };
+            NeutralAggressive = new Player { Index = -2, Name = "Neutral Aggressive" };
+
+            foreach (var data in playersData)
+            {
+                if (data.index < 0 || players.ContainsKey(data.index))
                 {
-                    players.Add(new Player(name, n));
-                    n++;
+                    throw new Exception("Bad player index: " + data.index + " Index must be greater then 0 and Index must be unique!");
                 }
 
-                int i = 0;
-
-                foreach (var player in players)
+                players[data.index] = new Player()
                 {
-                    if (enemies != null)
-                        for (int j = 0; j < enemies[i].Length; j++)
-                            player.enemies.Add(enemies[i][j], players[enemies[i][j]]);
+                    Index = data.index,
+                    Name = data.playerName,
+                    TeamColor = data.color
+                };
+            }
 
-                    if (allies != null)
-                        for (int j = 0; j < allies[i].Length; j++)
-                            player.allies.Add(allies[i][j], players[allies[i][j]]);
+            var dataMap = playersData.ToDictionary(p => p.index);
 
-                    player.enemies.Add(NeutralAggressive.Index, NeutralAggressive);
-                    NeutralAggressive.enemies.Add(player.Index, player);
-
-                    i++;
+            foreach (var player in players.Values)
+            {
+                foreach (var enemy in dataMap[player.Index].enemies)
+                {
+                    player.enemies[enemy] = players[enemy];
                 }
 
-                return players;
+                foreach (var ally in dataMap[player.Index].allies)
+                {
+                    player.allies[ally] = players[ally];
+                }
+
+                player.allies[NeutralPassive.Index] = NeutralPassive;
+                player.enemies[NeutralAggressive.Index] = NeutralAggressive;
             }
         }
 
         #endregion
 
         #region Instance
+
         private Dictionary<int, Player> enemies;
         private Dictionary<int, Player> allies;
 
@@ -75,26 +96,28 @@ namespace Hexocracy.Core
 
         public Color TeamColor { get; private set; }
 
-        private Player(string name, int index)
+        private Player()
         {
-            enemies = new Dictionary<int,Player>();
-            allies = new Dictionary<int,Player>();
-            Name = name;
-            Index = index;
-        }
-
-        public bool IsEnemy(Player player)
-        {
-            return enemies.ContainsKey(player.Index);
+            enemies = new Dictionary<int, Player>();
+            allies = new Dictionary<int, Player>();
         }
 
         [RawPrototype]
         public void SwitchActiveState(bool active)
         {
             if (active)
-                InputController.I.ActivatePlayer(this);
+            {
+                GS.Get<InputController>().ActivatePlayer(this);
+            }
             else
-                InputController.I.DeactivatePlayer(this);
+            {
+                GS.Get<InputController>().DeactivatePlayer(this);
+            }
+        }
+
+        public bool IsEnemy(Player player)
+        {
+            return enemies.ContainsKey(player.Index);
         }
 
         public bool IsAlly(Player player)

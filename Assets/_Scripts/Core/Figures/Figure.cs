@@ -21,13 +21,10 @@ namespace Hexocracy.Core
 
         protected DynamicStat hp;
         protected DynamicStat ap;
+        
         protected Stat minDamage;
         protected Stat maxDamage;
         protected Stat initiative;
-
-        public Range RDamage { get; private set; }
-
-        public float Damage { get { return RDamage; } }
 
         private GameDependence<Stat> simpleAttack;
         private GameDependence<Stat> penaltiAllyAttack;
@@ -35,11 +32,17 @@ namespace Hexocracy.Core
         private GameDependence<Stat> penaltyForcedMove;
 
         #endregion
+
         #region Properties
+
+        public Range RDamage { get; private set; }
+
+        public float Damage { get { return RDamage; } }
 
         public override ContentType Type { get { return ContentType.Figure; } }
 
         #endregion
+
         #region Initialize
         protected Figure()
         {
@@ -54,9 +57,9 @@ namespace Hexocracy.Core
         }
 
         [RawPrototype]
-        public override void Initialize(FigureContainer container, FigureData data)
+        public override void Initialize(FigureData data)
         {
-            base.Initialize(container, data);
+            base.Initialize(data);
             Owner = Player.GetByIndex(data.owner);
 
             //*!Crutch
@@ -71,6 +74,7 @@ namespace Hexocracy.Core
 
 
         #endregion
+
         #region Stats
 
         protected virtual void InitStats(FigureData data)
@@ -131,6 +135,7 @@ namespace Hexocracy.Core
         }
 
         #endregion
+
         #region Fighting
 
         protected virtual void InitFight()
@@ -152,29 +157,8 @@ namespace Hexocracy.Core
             }
         }
 
-        [RawPrototype]
-        private int bombCD = 3;
-        [RawPrototype]
-        public int bombCurrCD = 0;
-
-        [RawPrototype]
-        public void CreateBomb()
-        {
-            if (bombCurrCD == 0)
-            {
-                bombCurrCD = bombCD;
-
-                var bomb = new BombData();
-                bomb.damage = URandom.Range(3f, 4f) * mass;
-                bomb.lifeTime = 5;
-                bomb.overrideOffsetK = true;
-                bomb.yOffsetK = 0;
-
-                GS.Get<ItemFactory>().Create(bomb, currentHex, Owner);
-            }
-        }
-
         #endregion
+
         #region Callback
         protected override void OnFigureCollided(Figure figure, int bounceHeight, bool forced)
         {
@@ -204,21 +188,17 @@ namespace Hexocracy.Core
             OnAttack(this, penaltyForcedMove.Calculate());
         }
 
-        protected override void OnTurnStarted(bool newRound)
-        {
-            if (newRound)
-            {
-                ap.CurrValue = ap.Value;
-                if (bombCurrCD != 0)
-                {
-                    bombCurrCD--;
-                }
-            }
-        }
-
-        protected override void OnItemBoxContact(IContainable item)
+        protected override void OnContentContact(IContainable item)
         {
             ((ItemBox)item).Contact(this);
+        }
+
+        protected override void OnTurnStarted(bool isNewRound)
+        {
+            if (isNewRound)
+            {
+                AP = MaxAP;
+            }
         }
         #endregion
 

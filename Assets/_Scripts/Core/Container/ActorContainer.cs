@@ -6,12 +6,16 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
     [GameService(GameServiceType.Container)]
     public class ActorContainer : EntityContainer<IActor>
     {
-        private ActorContainer() { }
-       
+        private Dictionary<int, Dictionary<int, IActor>> actorsByOwners;
+
+        private ActorContainer()
+        {
+            actorsByOwners = new Dictionary<int, Dictionary<int, IActor>>();
+        }
+
         private void r_post_ctor()
         {
             GS.Get<FigureContainer>().OnContentInitialized += OnActorAdded;
@@ -19,14 +23,32 @@ namespace Hexocracy.Core
             GS.Get<FigureContainer>().OnRemove += OnActorRemoved;
         }
 
-        private void OnActorAdded(IEnumerable<Figure> actors)
+        public List<IActor> GetActorsByPlayer(int playerIndex)
         {
-            Add(actors.Cast<IActor>());
+            if (actorsByOwners.ContainsKey(playerIndex))
+            {
+                return actorsByOwners[playerIndex].Values.ToList();
+            }
+
+            return new List<IActor>();
         }
 
-        private void OnActorRemoved(IEnumerable<Figure> actors)
+        private void OnActorAdded(IEnumerable<Figure> figures)
         {
-            Remove(actors.Cast<IActor>());
+            var actors = figures.Cast<IActor>();
+
+            SumActorsByOwners(actors, true);
+
+            Add(figures.Cast<IActor>());
+        }
+
+        private void OnActorRemoved(IEnumerable<Figure> figures)
+        {
+            var actors = figures.Cast<IActor>();
+
+            SumActorsByOwners(actors, false);
+
+            Remove(actors);
         }
 
         protected override void OnDispose()
@@ -36,6 +58,30 @@ namespace Hexocracy.Core
             GS.Get<FigureContainer>().OnContentInitialized -= OnActorAdded;
             GS.Get<FigureContainer>().OnAdd -= OnActorAdded;
             GS.Get<FigureContainer>().OnRemove -= OnActorRemoved;
+        }
+
+        private void SumActorsByOwners(IEnumerable<IActor> actors, bool added)
+        {
+            foreach (var actor in actors)
+            {
+                var playerExist = actorsByOwners.ContainsKey(actor.Owner);
+
+                if (!playerExist && added)
+                {
+                    actorsByOwners[actor.Owner] = new Dictionary<int, IActor>();
+                    playerExist = true;
+                }
+
+                if (added && !actorsByOwners[actor.Owner].ContainsKey(actor.EntityID))
+                {
+                    actorsByOwners[actor.Owner][actor.EntityID] = actor;
+                }
+                else if (playerExist)
+                {
+                    actorsByOwners[actor.Owner].Remove(actor.EntityID);
+                }
+
+            }
         }
     }
 }

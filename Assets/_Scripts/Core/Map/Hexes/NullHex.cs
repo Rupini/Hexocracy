@@ -19,14 +19,14 @@ namespace Hexocracy.Core
 
         public int EntityID { get { return Index; } }
 
-        public event Action OnDestroy = delegate { };
+        public event Action<IEntity> OnDestroy = delegate { };
 
         public bool Destroyed { get; private set; }
 
         public void Destroy()
         {
             Destroyed = true;
-            OnDestroy();
+            OnDestroy(this);
         }
 
         #endregion

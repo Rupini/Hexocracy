@@ -13,6 +13,6 @@ namespace Hexocracy.Core
         
         void Destroy();
         
-        event Action OnDestroy;
+        event Action<IEntity> OnDestroy;
     }
 }

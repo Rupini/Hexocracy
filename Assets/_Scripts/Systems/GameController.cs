@@ -9,31 +9,68 @@ namespace Hexocracy.Systems
         public static Camera MainCamera { get; private set; }
         public static Canvas Canvas { get; private set; }
 
+        [RawPrototype]
+        public List<PlayerData> players;
+
         private void Awake()
         {
             GS.Initialize();
-
-            Player.Builder.Build(new string[] { "First guy", "Second guy" },
-                                         new int[][] { new int[] { 1 }, new int[] { 0 } },
-                                         null);
-
-            InitializeHudComponents();
-        }
-
-        private void InitializeHudComponents()
-        {
-            Canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Play/Canvas"));
-            MainCamera = Instantiate(Resources.Load<Camera>("Prefabs/Play/MainCamera"));
         }
 
         private void Start()
         {
+            InitHudComponents();
+
+            InitPlayers();
+
             GS.Get<GameMap>().InitializeContent();
             GS.Get<FigureContainer>().InitializeContent();
             GS.Get<SomeEntityContainer>().InitializeContent();
 
+            GS.Get<ActorContainer>().OnRemove += OnActorsDestroyed;
+
             GS.Get<TurnController>().Start();
         }
 
+        private void InitPlayers()
+        {
+            Player.Initialize(players);
+        }
+
+        private void InitHudComponents()
+        {
+            Canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Play/Canvas"));
+
+            MainCamera = FindObjectOfType<Camera>();
+            if (!MainCamera)
+            {
+                MainCamera = Instantiate(Resources.Load<Camera>("Prefabs/Play/MainCamera"));
+            }
+        }
+
+
+        [RawPrototype]
+        private void OnActorsDestroyed(IEnumerable<IActor> actors)
+        {
+            var playerSet = new HashSet<int>();
+
+            foreach (var actor in actors)
+            {
+                if (!playerSet.Contains(actor.Owner) && GS.Get<ActorContainer>().GetActorsByPlayer(actor.Owner).Count == 0)
+                {
+                    THE_END(actor.Owner);
+                }
+                else
+                {
+                    playerSet.Add(actor.Owner);
+                }
+            }
+        }
+
+        [RawPrototype]
+        private void THE_END(Player winner)
+        {
+            Debug.Log("THE END! " + winner.Name + " is WINNER");
+        }
     }
 }

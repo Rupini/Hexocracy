@@ -21,7 +21,8 @@ namespace Hexocracy.Core
         public void Create(GameObject baseObject, FigureData data)
         {
             var figure = baseObject.AddComponent<Figure>();
-            figure.Initialize(container, data);
+            figure.Initialize(data);
+            container.Add(figure);
         }
 
     }

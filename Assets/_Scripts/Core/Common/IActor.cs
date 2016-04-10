@@ -7,6 +7,8 @@ namespace Hexocracy.Core
 {
     public interface IActor : IEntity
     {
+        Player Owner { get; }
+
         bool Active { get; }
 
         void Activate();

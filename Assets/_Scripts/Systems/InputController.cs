@@ -5,35 +5,31 @@ using UnityEngine;
 namespace Hexocracy.Systems
 {
     [RawPrototype]
+    [GameService(GameServiceType.Contoller)]
     public class InputController : MonoBehaviour
     {
-        private static InputController _i;
-        public static InputController I
-        {
-            get
-            {
-                if (!_i)
-                {
-                    _i = new GameObject("InputController").AddComponent<InputController>();
-                }
+        private const int HEX_LAYER = 1 << 8;
+        private const int FIGURE_LAYER = 1 << 9;
+        private const float CAST_DISTANCE = 100;
 
-                return _i;
-            }
-        }
-
-        private Camera currCamera;
         private Figure selectedFigure;
         private Player activePlayer;
 
-        private InputController()
+        private static InputController r_mono_ctor()
         {
-            currCamera = Camera.main;
+            return new GameObject("InputController").AddComponent<InputController>();
         }
 
         private void Update()
         {
-            if (activePlayer == null) return;
+            if (activePlayer != null)
+            {
+                Process();
+            }
+        }
 
+        private void Process()
+        {
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 GS.Get<TurnController>().OnPlayerFinishedTurn();
@@ -41,55 +37,26 @@ namespace Hexocracy.Systems
 
             if (Input.GetMouseButtonDown(0))
             {
-                var ray = currCamera.ScreenPointToRay(Input.mousePosition);
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000, 1 << 9))
+                if (Physics.Raycast(ray, out hit, CAST_DISTANCE, FIGURE_LAYER))
                 {
                     selectedFigure = hit.collider.GetComponent<Figure>();
                     StatsPanel.SetTarget((Figure)selectedFigure);
                 }
             }
 
-            //if (Input.GetMouseButtonDown(1))
-            //{
-            //    var ray = currCamera.ScreenPointToRay(Input.mousePosition);
-            //    RaycastHit hit;
-            //    if (Physics.Raycast(ray, out hit, 1000, 1 << 8))
-            //    {
-            //        GameMap.I.ResetFlags(0);
-            //        hit.collider.GetComponent<Hex>().PaintNeighbors(Color.green);
-            //    }
-            //}
-            int createBombFlag = 0;
-
-            if (Input.GetKey(KeyCode.B) && selectedFigure && selectedFigure.Active)
-            {
-                createBombFlag = selectedFigure.bombCurrCD == 0 ? 1 : -1;
-            }
-
             if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.Active && selectedFigure.Owner == activePlayer)
             {
-                if (createBombFlag != -1)
-                {
-                    var ray = currCamera.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit hit;
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-                    if (Physics.Raycast(ray, out hit, 1000, 1 << 8))
-                    {
-                        var result = selectedFigure.MoveTo(hit.collider.GetComponent<Hex>(), Input.GetKey(KeyCode.Q));
-                        if (result == MoveResult.Ok && createBombFlag == 1)
-                        {
-                            selectedFigure.CreateBomb();
-                        }
-                    }
-                }
-                else
+                if (Physics.Raycast(ray, out hit, CAST_DISTANCE, HEX_LAYER))
                 {
-                    Instantiate(Resources.Load<DummyMsgSpawner>("Prefabs/Play/Msg")).Initialize(25, 1, 2, 2, 
-                        "Bomb kaking in CD! Sry Bitch! Wait " + selectedFigure.bombCurrCD + " nah!", Color.red);
+                    selectedFigure.MoveTo(hit.collider.GetComponent<Hex>(), Input.GetKey(KeyCode.Q));
                 }
+
             }
-
         }
 
         public void ActivatePlayer(Player player)

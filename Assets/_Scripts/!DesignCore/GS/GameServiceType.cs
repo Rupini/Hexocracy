@@ -12,6 +12,6 @@ namespace Hexocracy
         Container = 1,
         Factory = 2,
         Model = 4,
-        Contoller = 8
+        Contoller = 8,
     }
 }

@@ -31,8 +31,8 @@ namespace Hexocracy.Core
 
         public ContentType Type { get { return ContentType.Empty; } }
 
-        public void Destroy() { OnDestroy(); }
+        public void Destroy() { OnDestroy(this); }
 
-        public event Action OnDestroy = delegate { };
+        public event Action<IEntity> OnDestroy = delegate { };
     }
 }

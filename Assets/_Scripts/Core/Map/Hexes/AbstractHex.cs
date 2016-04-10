@@ -14,7 +14,7 @@ namespace Hexocracy.Core
 
         public int EntityID { get { return Index; } }
 
-        public event Action OnDestroy = delegate { };
+        public event Action<IEntity> OnDestroy = delegate { };
 
         public bool Destroyed { get; private set; }
 
@@ -23,7 +23,7 @@ namespace Hexocracy.Core
             base.Destroy();
             Destroy(go);
             Destroyed = true;
-            OnDestroy();
+            OnDestroy(this);
         }
 
         #endregion
