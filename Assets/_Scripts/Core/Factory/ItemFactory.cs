@@ -8,7 +8,7 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
+
     [GameService(GameServiceType.Factory)]
     public class ItemFactory
     {

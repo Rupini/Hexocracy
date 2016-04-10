@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Hexocracy.View
+namespace Hexocracy.HUD
 {
     [RawPrototype]
     public class StatsPanel : MonoBehaviour
@@ -15,13 +15,9 @@ namespace Hexocracy.View
 
         private Text text;
 
-        private static StatsPanel instance;
-
         private void Awake()
         {
-            instance = this;
-            text = GetComponent<Text>();
-            gameObject.SetActive(false);
+            text = gameObject.GetComponent<Text>();
         }
 
         private void Update()
@@ -39,10 +35,9 @@ namespace Hexocracy.View
             }
         }
 
-        public static void SetTarget(Figure target)
+        public void SetTarget(Figure target)
         {
-            instance.gameObject.SetActive(true);
-            instance.target = target;
+            this.target = target;
         }
 
     }

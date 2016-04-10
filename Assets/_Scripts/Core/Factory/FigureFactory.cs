@@ -6,13 +6,13 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
     [GameService(GameServiceType.Factory)]
     public class FigureFactory
     {
         private FigureContainer container;
 
         private FigureFactory() { }
+        
         private void r_post_ctor()
         {
             container = GS.Get<FigureContainer>();
@@ -21,7 +21,9 @@ namespace Hexocracy.Core
         public void Create(GameObject baseObject, FigureData data)
         {
             var figure = baseObject.AddComponent<Figure>();
+            
             figure.Initialize(data);
+            
             container.Add(figure);
         }
 

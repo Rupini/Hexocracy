@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using UnityEngine;
 
 namespace Hexocracy.Core
 {
@@ -11,8 +8,12 @@ namespace Hexocracy.Core
 
         bool Active { get; }
 
-        void Activate();
+        bool Activate();
 
-        void Deactivate();
+        bool Deactivate();
+
+        Vector3 Position { get; }
+
+        Figure Figure { get; }
     }
 }

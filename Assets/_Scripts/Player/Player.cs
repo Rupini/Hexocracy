@@ -1,13 +1,11 @@
-﻿using Hexocracy.Systems;
+﻿using Hexocracy.Controller;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
     public class Player
     {
         #region Static
@@ -100,19 +98,6 @@ namespace Hexocracy.Core
         {
             enemies = new Dictionary<int, Player>();
             allies = new Dictionary<int, Player>();
-        }
-
-        [RawPrototype]
-        public void SwitchActiveState(bool active)
-        {
-            if (active)
-            {
-                GS.Get<InputController>().ActivatePlayer(this);
-            }
-            else
-            {
-                GS.Get<InputController>().DeactivatePlayer(this);
-            }
         }
 
         public bool IsEnemy(Player player)

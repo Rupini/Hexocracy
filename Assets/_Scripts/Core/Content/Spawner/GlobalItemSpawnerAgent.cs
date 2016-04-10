@@ -33,7 +33,14 @@ namespace Hexocracy.Core
         {
             map = GS.Get<GameMap>();
 
-            originHex = data.originHex.GameInstance;
+            if (data.originHex)
+            {
+                originHex = data.originHex.GameInstance;
+            }
+            else
+            {
+                originHex = map.Get(0);
+            }
 
             minCountPerTurn = data.minCountPerTurn;
             maxCountPerTurn = data.maxCountPerTurn;

@@ -20,14 +20,14 @@ namespace Hexocracy.Core
 
         private GameMap map;
         private Nihility nihility;
-        private int _findFlag;
         private List<IHexAddition> additions;
+
+        private int _findFlag;
 
         public int H { get; private set; }
 
         public List<Hex> Neighbors { get; protected set; }
 
-        [RawPrototype]
         public int FindFlag
         {
             get
@@ -37,12 +37,6 @@ namespace Hexocracy.Core
             set
             {
                 _findFlag = value;
-                if (_findFlag != 0)
-                {
-                    GetComponentInChildren<TextMesh>().text = "";// findFlag.ToString();
-                }
-                else
-                    GetComponentInChildren<TextMesh>().text = "";
             }
         }
 
@@ -53,13 +47,17 @@ namespace Hexocracy.Core
 
         #region Initialize
 
-        [RawPrototype]
-        public void Initialize(HexData data)
+        protected override void Awake()
         {
+            base.Awake();
+
             additions = new List<IHexAddition>();
             map = GS.Get<GameMap>();
             nihility = GS.Get<Nihility>();
+        }
 
+        public void Initialize(HexData data)
+        {
             SetIndex(new Index2D(data.xIndex, data.yIndex));
             H = data.height;
             t.localScale = new Vector3(t.localScale.x, data.scaleY, t.localScale.z);
@@ -106,13 +104,11 @@ namespace Hexocracy.Core
             }
         }
 
-        [RawPrototype]
         public void OnContentEntered(IContainable content)
         {
             Content = content;
         }
 
-        [RawPrototype]
         public void OnContentLeft(IContainable content)
         {
             if (Content == content)
@@ -132,12 +128,6 @@ namespace Hexocracy.Core
             var dy = Mathf.Abs(Index.Y - hex.Index.Y);
 
             return dx != 2 && dx + dy == 2;
-        }
-
-        [RawPrototype]
-        public void ChangeColor(Color color)
-        {
-            GetComponentInChildren<SpriteRenderer>().color = color;
         }
         
         private void AddAddition(IHexAddition addition)

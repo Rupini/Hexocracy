@@ -15,6 +15,7 @@ namespace Hexocracy.Core
         public override void InitializeContent()
         {
             var editorHexes = GameObject.FindObjectsOfType<HexEditor>().ToList();
+
             var hexes = editorHexes.ConvertAll(editorHex =>
             {
                 var hex = editorHex.ToGameInstance();
@@ -31,13 +32,11 @@ namespace Hexocracy.Core
             base.InitializeContent();
         }
 
-        [RawPrototype]
         public void ResetFlags(int undefinedValue)
         {
-            foreach (var pair in entities)
+            foreach (var hex in entities.Values)
             {
-                pair.Value.FindFlag = undefinedValue;
-                pair.Value.ChangeColor(Color.white);
+                hex.FindFlag = undefinedValue;
             }
         }
 
@@ -47,11 +46,11 @@ namespace Hexocracy.Core
 
         public override void Add(IEnumerable<Hex> hexes)
         {
-            foreach (var hex in hexes)
-            {
-                DefineMainIndicesOnAdd(hex.Index);
-                entities[hex.EntityID] = hex;
-            }
+            //foreach (var hex in hexes)
+            //{
+            //    DefineMainIndicesOnAdd(hex.Index);
+            //    entities[hex.EntityID] = hex;
+            //}
 
             foreach (var hex in hexes)
             {
@@ -61,16 +60,18 @@ namespace Hexocracy.Core
                 }
             }
 
-            OnAdd(hexes);
+            base.Add(hexes);
+
+            //OnAdd(hexes);
         }
 
         public override void Remove(IEnumerable<Hex> hexes)
         {
-            foreach (var hex in hexes)
-            {
-                DefineMainIndicesOnRemove(hex.Index);
-                entities.Remove(hex.EntityID);
-            }
+            //foreach (var hex in hexes)
+            //{
+            //    DefineMainIndicesOnRemove(hex.Index);
+            //    entities.Remove(hex.EntityID);
+            //}
 
             foreach (var hex in hexes)
             {
@@ -80,7 +81,9 @@ namespace Hexocracy.Core
                 }
             }
 
-            OnRemove(hexes);
+            base.Remove(hexes);
+
+            //OnRemove(hexes);
         }
 
         public bool InMapRange(Index2D index)

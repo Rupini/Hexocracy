@@ -8,8 +8,6 @@ using Hexocracy.Systems;
 
 namespace Hexocracy.Core
 {
-
-    [RawPrototype]
     [ExecuteInEditMode]
     public class HexEditor : EditorBehaviour<Hex>
     {
@@ -61,10 +59,15 @@ namespace Hexocracy.Core
             if (data.hasAddition != lastHasAddition)
             {
                 lastHasAddition = data.hasAddition;
+
                 if (data.hasAddition)
+                {
                     r.material = additionMaterial;
+                }
                 else
+                {
                     r.material = defaultMaterial;
+                }
             }
         }
 

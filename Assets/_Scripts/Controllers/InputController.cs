@@ -1,8 +1,9 @@
-﻿using Hexocracy.Core;
-using Hexocracy.View;
+﻿using Hexocracy.Controllers;
+using Hexocracy.Core;
+using Hexocracy.HUD;
 using UnityEngine;
 
-namespace Hexocracy.Systems
+namespace Hexocracy.Controller
 {
     [RawPrototype]
     [GameService(GameServiceType.Contoller)]
@@ -15,9 +16,19 @@ namespace Hexocracy.Systems
         private Figure selectedFigure;
         private Player activePlayer;
 
+        private HUDController hud;
+
+        private TurnController turnController;
+
         private static InputController r_mono_ctor()
         {
             return new GameObject("InputController").AddComponent<InputController>();
+        }
+
+        private void r_post_ctor()
+        {
+            hud = GS.Get<HUDController>();
+            turnController = GS.Get<TurnController>();
         }
 
         private void Update()
@@ -32,7 +43,7 @@ namespace Hexocracy.Systems
         {
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                GS.Get<TurnController>().OnPlayerFinishedTurn();
+                turnController.OnPlayerFinishedTurn();
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -42,11 +53,11 @@ namespace Hexocracy.Systems
                 if (Physics.Raycast(ray, out hit, CAST_DISTANCE, FIGURE_LAYER))
                 {
                     selectedFigure = hit.collider.GetComponent<Figure>();
-                    StatsPanel.SetTarget((Figure)selectedFigure);
+                    GS.Get<HUDController>().ShowStatsPanel(selectedFigure);
                 }
             }
 
-            if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.Active && selectedFigure.Owner == activePlayer)
+            if (Input.GetMouseButtonDown(1) && selectedFigure && selectedFigure.GetComponent<Actor>().Active && selectedFigure.Owner == activePlayer)
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -59,14 +70,32 @@ namespace Hexocracy.Systems
             }
         }
 
-        public void ActivatePlayer(Player player)
+        public bool ActivateActor(IActor actor)
         {
-            activePlayer = player;
+            if (actor.Activate())
+            {
+                activePlayer = actor.Owner;
+
+                hud.FocusCameraOnPoint(actor.Position);
+
+                hud.ShowStatsPanel(actor.Figure);
+
+                return true;
+            }
+
+            return true;
         }
 
-        public void DeactivatePlayer(Player player)
+        public bool DeactivateActor(IActor actor)
         {
-            if (activePlayer == player) player = null;
+            if (actor.Deactivate())
+            {
+                activePlayer = null;
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

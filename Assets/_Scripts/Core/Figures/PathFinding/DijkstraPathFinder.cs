@@ -22,8 +22,8 @@ namespace Hexocracy.Core
             public int Cost { get; set; }
         }
 
-        public DijkstraPathFinder(int jumpUpHeight, int jumpDownHeight)
-            : base(jumpUpHeight, jumpDownHeight)
+        public DijkstraPathFinder(int jumpUpHeight, int jumpDownHeight, Func<Hex, Hex, int> calculateMovementCost)
+            : base(jumpUpHeight, jumpDownHeight, calculateMovementCost)
         {
             H = new Dictionary<int, Hex>();
             D = new Dictionary<int, int>();
@@ -127,7 +127,7 @@ namespace Hexocracy.Core
         private int GetCost(Hex v, Hex u)
         {
             if (CheckHeight(v, u, forced) && checkPassibility(u) == PassibilityType.Ok)
-                return Mechanics.CalculateMovementCost(v, u);
+                return calculateMovementCost(v, u);
             else
                 return OBSTACLE;
         }

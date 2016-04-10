@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Hexocracy.Systems
+namespace Hexocracy.Controller
 {
     [GameService(GameServiceType.Contoller)]
     public class TurnController
     {
         #region Defenition
         private ActorContainer container;
+
+        private InputController inputController;
 
         private List<IActor> actors;
         private int currentFigureIndex;
@@ -29,6 +31,7 @@ namespace Hexocracy.Systems
         private void r_post_ctor()
         {
             container = GS.Get<ActorContainer>();
+            inputController = GS.Get<InputController>();
         }
         #endregion
 
@@ -39,7 +42,7 @@ namespace Hexocracy.Systems
 
         public void Start()
         {
-            if(!alreadyStarted)
+            if (!alreadyStarted)
             {
                 alreadyStarted = true;
                 Next(true);
@@ -50,11 +53,23 @@ namespace Hexocracy.Systems
             }
         }
 
+        public void Stop()
+        {
+            GG = true;
+        }
+
         public void OnPlayerFinishedTurn()
         {
-            var roundFinished = currentFigureIndex == actors.Count;
-            TurnFinished(roundFinished);
-            EndTurn(roundFinished);
+            if (!GG)
+            {
+                var roundFinished = currentFigureIndex == actors.Count;
+
+                if (inputController.DeactivateActor(pickedActor))
+                {
+                    TurnFinished(roundFinished);
+                    Next(roundFinished);
+                }
+            }
         }
 
         #endregion
@@ -117,14 +132,8 @@ namespace Hexocracy.Systems
             }
             else
             {
-                pickedActor.Activate();
+                inputController.ActivateActor(pickedActor);
             }
-        }
-
-        private void EndTurn(bool roundFinished)
-        {
-            pickedActor.Deactivate();
-            Next(roundFinished);
         }
 
         #endregion

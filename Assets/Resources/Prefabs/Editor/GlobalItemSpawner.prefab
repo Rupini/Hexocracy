@@ -42,23 +42,10 @@ MonoBehaviour:
   data:
     agents:
     - originHex: {fileID: 0}
-      minCountPerTurn: 1
-      maxCountPerTurn: 1.39999998
-      limitCount: 0
-      limitDistanceFromCenter: 2
-      itemType: 1
-      element:
-        capacity: 1
-        lifeTime: 0
-        overrideOffsetK: 0
-        yOffsetK: 0
-        color: {r: 0, g: 0, b: 0, a: 0}
-        kind: 3
-    - originHex: {fileID: 0}
-      minCountPerTurn: 0
-      maxCountPerTurn: 0
-      limitCount: 20
-      limitDistanceFromCenter: 2
+      minCountPerTurn: 1.5
+      maxCountPerTurn: 2.5
+      limitCount: 12
+      limitDistanceFromCenter: 0
       itemType: 1
       element:
         capacity: 1
@@ -67,6 +54,32 @@ MonoBehaviour:
         yOffsetK: 0
         color: {r: 0, g: 0, b: 0, a: 0}
         kind: 1
+    - originHex: {fileID: 0}
+      minCountPerTurn: 1.5
+      maxCountPerTurn: 2.5
+      limitCount: 12
+      limitDistanceFromCenter: 0
+      itemType: 1
+      element:
+        capacity: 1
+        lifeTime: 0
+        overrideOffsetK: 0
+        yOffsetK: 0
+        color: {r: 0, g: 0, b: 0, a: 0}
+        kind: 2
+    - originHex: {fileID: 0}
+      minCountPerTurn: 1
+      maxCountPerTurn: 2
+      limitCount: 10
+      limitDistanceFromCenter: 5
+      itemType: 1
+      element:
+        capacity: 1
+        lifeTime: 0
+        overrideOffsetK: 0
+        yOffsetK: 0
+        color: {r: 0, g: 0, b: 0, a: 0}
+        kind: 3
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

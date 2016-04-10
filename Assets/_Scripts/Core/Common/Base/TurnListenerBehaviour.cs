@@ -1,4 +1,4 @@
-﻿using Hexocracy.Systems;
+﻿using Hexocracy.Controller;
 
 namespace Hexocracy.Core
 {

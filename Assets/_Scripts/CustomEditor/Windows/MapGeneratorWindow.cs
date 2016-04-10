@@ -38,13 +38,13 @@ namespace Hexocracy.CustomEditor
             {
                 case MapGenType.Circle:
                     circleCount = EditorGUILayout.IntSlider("Circle count ", circleCount, 2, 20);
+
+                    if (GUILayout.Button("Generate")) Generate();
+
+                    if (GUILayout.Button("DestroyAll")) Destroy();
+
                     break;
             }
-
-
-            if (GUILayout.Button("Generate")) Generate();
-
-            if (GUILayout.Button("DestroyAll")) Destroy();
 
             if (!prototypeHex)
             {

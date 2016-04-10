@@ -14,23 +14,16 @@ namespace Hexocracy.Core
         public override void InitializeContent()
         {
             var editorFigures = GameObject.FindObjectsOfType<FigureEditor>().ToList();
+
             editorFigures.ForEach(editorFigure =>
             {
                 var figure = editorFigure.ToGameInstance();
+
                 entities[figure.EntityID] = figure;
             });
 
             base.InitializeContent();
         }
-
-        public override void Add(IEnumerable<Figure> entityCollection)
-        {
-            foreach (var entity in entityCollection)
-            {
-                entity.OnDestroy += entityFigure => Remove((Figure)entityFigure);
-            }
-
-            base.Add(entityCollection);
-        }
+       
     }
 }

@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [RawPrototype]
     public abstract class AbstractHex : TurnListenerBehaviour, IHex
     {
         #region IEntity

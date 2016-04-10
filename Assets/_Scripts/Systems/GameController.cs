@@ -1,4 +1,6 @@
-﻿using Hexocracy.Core;
+﻿using Hexocracy.Controller;
+using Hexocracy.Controllers;
+using Hexocracy.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,9 +8,6 @@ namespace Hexocracy.Systems
 {
     public class GameController : MonoBehaviour
     {
-        public static Camera MainCamera { get; private set; }
-        public static Canvas Canvas { get; private set; }
-
         private void Awake()
         {
             GS.Initialize();
@@ -16,36 +15,19 @@ namespace Hexocracy.Systems
 
         private void Start()
         {
-            InitHudComponents();
-
-            InitPlayers();
+            Player.Initialize(PlayerPool.GetPlayers());
 
             GS.Get<GameMap>().InitializeContent();
             GS.Get<FigureContainer>().InitializeContent();
+            GS.Get<ActorContainer>().InitializeContent();
             GS.Get<SomeEntityContainer>().InitializeContent();
 
             GS.Get<ActorContainer>().OnRemove += OnActorsDestroyed;
 
             GS.Get<TurnController>().Start();
+
+            GS.DestroyTemporary();
         }
-
-        private void InitPlayers()
-        {
-            Player.Initialize(PlayerPool.GetPlayers());
-        }
-
-        private void InitHudComponents()
-        {
-            Canvas = RM.InstantiatePrefab<Canvas>("Canvas");
-
-            MainCamera = FindObjectOfType<Camera>();
-
-            if (!MainCamera)
-            {
-                MainCamera = RM.InstantiatePrefab<Camera>("MainCamera");
-            }
-        }
-
 
         [RawPrototype]
         private void OnActorsDestroyed(IEnumerable<IActor> actors)
@@ -66,9 +48,11 @@ namespace Hexocracy.Systems
         }
 
         [RawPrototype]
-        private void THE_END(Player winner)
+        private void THE_END(Player looser)
         {
-            Debug.Log("THE END! " + winner.Name + " is WINNER");
+            GS.Get<HUDController>().CreateDummyMSG(40, 2.5f, 5, 10, looser.Name + " Is Looser!", Color.red);
+            
+            GS.Get<TurnController>().Stop();
         }
     }
 }

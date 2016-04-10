@@ -42,7 +42,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: b921edb86d4b1314c9dd8ccf029b33d5, type: 2}
+  - {fileID: 2100000, guid: 220e53176743b6944ba46fc01a4d6641, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -110,7 +110,7 @@ MonoBehaviour:
     addition:
       type: 0
       kind: 0
-      count: 0
+      capacity: 0
       minRespawnTime: 0
       maxRespawnTime: 0
       respawnOnStart: 0
@@ -154,6 +154,10 @@ Prefab:
       propertyPath: m_Name
       value: Cover
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 220e53176743b6944ba46fc01a4d6641, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 109378}

@@ -9,8 +9,7 @@ using UnityEngine;
 namespace Hexocracy.Core
 {
 
-    [RawPrototype]
-    public class ItemBoxEditor : EditorBehaviour<ItemBox>
+    public class ItemBoxEditor : EditorBehaviour<ItemBox>, IEntityEditor
     {
         public ItemType type;
         
@@ -64,8 +63,11 @@ namespace Hexocracy.Core
         protected override ItemBox OnGameInstanceInit()
         {
             var itemBox = go.AddComponent<ItemBox>();
+
             itemBox.Initialize(Player.NeutralPassive, data);
+            
             Destroy(this);
+            
             return itemBox;
         }
     }

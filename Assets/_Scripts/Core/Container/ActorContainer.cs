@@ -16,11 +16,32 @@ namespace Hexocracy.Core
             actorsByOwners = new Dictionary<int, Dictionary<int, IActor>>();
         }
 
-        private void r_post_ctor()
+        public override void InitializeContent()
         {
-            GS.Get<FigureContainer>().OnContentInitialized += OnActorAdded;
-            GS.Get<FigureContainer>().OnAdd += OnActorAdded;
-            GS.Get<FigureContainer>().OnRemove += OnActorRemoved;
+            var editorActors = GameObject.FindObjectsOfType<ActorEditor>().ToList();
+
+            editorActors.ForEach(editorActor =>
+            {
+                var actor = editorActor.ToGameInstance();
+
+                entities[actor.EntityID] = actor;
+            });
+
+            base.InitializeContent();
+        }
+
+        public override void Add(IEnumerable<IActor> entityCollection)
+        {
+            SumActorsByOwners(entityCollection, true);
+
+            base.Add(entityCollection);
+        }
+
+        public override void Remove(IEnumerable<IActor> entityCollection)
+        {
+            SumActorsByOwners(entityCollection, false);
+
+            base.Remove(entityCollection);
         }
 
         public List<IActor> GetActorsByPlayer(int playerIndex)
@@ -31,33 +52,6 @@ namespace Hexocracy.Core
             }
 
             return new List<IActor>();
-        }
-
-        private void OnActorAdded(IEnumerable<Figure> figures)
-        {
-            var actors = figures.Cast<IActor>();
-
-            SumActorsByOwners(actors, true);
-
-            Add(figures.Cast<IActor>());
-        }
-
-        private void OnActorRemoved(IEnumerable<Figure> figures)
-        {
-            var actors = figures.Cast<IActor>();
-
-            SumActorsByOwners(actors, false);
-
-            Remove(actors);
-        }
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-
-            GS.Get<FigureContainer>().OnContentInitialized -= OnActorAdded;
-            GS.Get<FigureContainer>().OnAdd -= OnActorAdded;
-            GS.Get<FigureContainer>().OnRemove -= OnActorRemoved;
         }
 
         private void SumActorsByOwners(IEnumerable<IActor> actors, bool added)

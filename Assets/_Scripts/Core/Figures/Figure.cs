@@ -1,4 +1,5 @@
-﻿using Hexocracy.HelpTools;
+﻿using Hexocracy.Controllers;
+using Hexocracy.HelpTools;
 using Hexocracy.Mech;
 using Hexocracy.Systems;
 using System;
@@ -10,7 +11,7 @@ using URandom = UnityEngine.Random;
 
 namespace Hexocracy.Core
 {
-    public class Figure : BouncingObject, IActor, IAttacker
+    public class Figure : BouncingObject, IAttacker
     {
         #region Definition
         protected StatsHolder statHolder;
@@ -36,6 +37,8 @@ namespace Hexocracy.Core
 
         #region Properties
 
+        public IDecorator Decorator { get; protected set; }
+
         public Range RDamage { get; private set; }
 
         public float Damage { get { return RDamage; } }
@@ -57,18 +60,13 @@ namespace Hexocracy.Core
             r.material.mainTexture = RM.LoadTexture("whiteColor");
         }
 
-        [RawPrototype]
         public override void Initialize(FigureData data)
         {
             base.Initialize(data);
 
             Owner = Player.GetByIndex(data.playerIndex);
 
-            //*!Crutch
-            r.material = RM.LoadMaterial("whiteMat");
-            r.material.mainTexture = RM.LoadTexture("whiteMat");
-            r.material.color = Owner.TeamColor;
-            //_
+            Decorator = new DummyDecorator(go, Owner.TeamColor, Owner.TeamColor + new Color(0.77f, 0.77f, 0.77f));
 
             InitStats(data);
             InitFight();
@@ -227,39 +225,6 @@ namespace Hexocracy.Core
                 HP = dependencies[FigureDependenceType.HPLoseByHunger].Calculate();
             }
         }
-
-        #endregion
-
-        #region Implements
-
-        #region IActivable
-
-        public bool Active { get; protected set; }
-
-        [RawPrototype]
-        private Color defaultColor;
-
-        [RawPrototype]
-        public void Deactivate()
-        {
-            Active = false;
-            Owner.SwitchActiveState(false);
-            if (this)//Cruntch!
-            {
-                r.material.color = defaultColor;
-            }
-        }
-
-        [RawPrototype]
-        public void Activate()
-        {
-            Active = true;
-            Owner.SwitchActiveState(true);
-            defaultColor = r.material.color;
-            r.material.color = new Color(1, 1, 1);
-        }
-
-        #endregion
 
         #endregion
     }

@@ -16,9 +16,7 @@ namespace Hexocracy.Core
                 if (data.color != prevColor)
                 {
                     prevColor = data.color;
-
-                    DestroyImmediate(r.sharedMaterial);
-
+                    
                     r.sharedMaterial = new Material(RM.LoadMaterial("editor_whiteMat"));
                     r.sharedMaterial.color = prevColor;
 
@@ -32,7 +30,7 @@ namespace Hexocracy.Core
         {
             GS.Get<FigureFactory>().Create(go, data);
 
-            GameObject.Destroy(this);
+            Destroy(this);
 
             return go.GetComponent<Figure>();
         }

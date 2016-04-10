@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
-    [DestroyAfterStart]
+    [Temporary]
     public class PlayerPool : MonoBehaviour
     {
         private static PlayerPool instance;

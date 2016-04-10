@@ -23,7 +23,6 @@ namespace Hexocracy
             Owner = Player.NeutralPassive;
         }
 
-        [RawPrototype]
         public void Initialize(Player owner, ItemData data)
         {
             Owner = owner;
@@ -32,9 +31,7 @@ namespace Hexocracy
 
             lifeTime = data.lifeTime;
             hasLifeTime = 0 != lifeTime;
-
-            r.material = RM.LoadMaterial("whiteMat");
-            r.material.mainTexture = RM.LoadTexture("whiteColor");
+          
             r.material.color = data.color;
 
             var yOffset = !data.overrideOffsetK ? r.bounds.size.y * 0.5f : r.bounds.size.y * data.yOffsetK;

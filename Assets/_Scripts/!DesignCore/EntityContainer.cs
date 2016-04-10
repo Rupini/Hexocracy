@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hexocracy.Core
 {
-    public abstract class EntityContainer<T>: IDisposable where T : IEntity
+    public abstract class EntityContainer<T> : IDisposable where T : IEntity
     {
         protected Dictionary<int, T> entities;
 
@@ -21,6 +21,11 @@ namespace Hexocracy.Core
 
         public virtual void InitializeContent()
         {
+            foreach (var entity in entities.Values)
+            {
+                entity.OnDestroy += (e) => Remove((T)e);
+            }
+
             OnContentInitialized(entities.Values);
         }
 
@@ -34,7 +39,10 @@ namespace Hexocracy.Core
             foreach (var entity in entityCollection)
             {
                 entities[entity.EntityID] = entity;
+
+                entity.OnDestroy += (e) => Remove((T)e);
             }
+
             OnAdd(entityCollection);
         }
 
@@ -49,6 +57,7 @@ namespace Hexocracy.Core
             {
                 entities.Remove(entity.EntityID);
             }
+
             OnRemove(entityCollection);
         }
 

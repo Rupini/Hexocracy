@@ -9,7 +9,6 @@ using UnityEngine;
 namespace Hexocracy.Core
 {
 
-    [RawPrototype]
     public abstract class BouncingObject : MapObject
     {
         #region Defenition
@@ -20,7 +19,6 @@ namespace Hexocracy.Core
 
         private bool forced;
         private bool inRetreatPassing;
-        private bool inFlight;
 
         private Hex previousHex;
         private Hex nextHex;
@@ -31,11 +29,14 @@ namespace Hexocracy.Core
         protected int jumpUpHeight;
         protected int jumpDownHeight;
 
+        public bool InFlight { get; private set; }
+
         public abstract float AP { get; protected set; }
 
         #endregion
 
         #region Initialize
+
         protected override void Awake()
         {
             base.Awake();
@@ -47,11 +48,16 @@ namespace Hexocracy.Core
             jumpDownHeight = data.jumpDownHeight;
 
             angle = data.jumpingAngle * Mathf.Deg2Rad;
-            pathFinder = new DijkstraPathFinder(jumpUpHeight, jumpDownHeight);
+            pathFinder = new DijkstraPathFinder(jumpUpHeight, jumpDownHeight, CalculateMovementCost);
             body = GetComponent<Rigidbody>();
             Height = r.bounds.size.y;
 
             DefineStartHex(0.5f * r.bounds.size.y);
+        }
+
+        private int CalculateMovementCost(Hex currHex, Hex nextHex)
+        {
+            return nextHex.HasFigure && nextHex.H > currHex.H ? nextHex.H - currHex.H + 1 : 1;
         }
 
         #endregion
@@ -60,7 +66,7 @@ namespace Hexocracy.Core
 
         public MoveResult MoveTo(Hex hex, bool forced)
         {
-            if (inFlight) return MoveResult.AlreadyInFlight;
+            if (InFlight) return MoveResult.AlreadyInFlight;
             if (AP <= 0) return MoveResult.NotEnoughActionPoints;
             if (hex.HasFigure && Owner == hex.Content.Owner) return MoveResult.BadDestination;
 
@@ -154,7 +160,7 @@ namespace Hexocracy.Core
 
             if (AP < 0) OnForcedMovePenalti();
 
-            inFlight = true;
+            InFlight = true;
             StartCoroutine(FinishJump(dt));
         }
 
@@ -162,7 +168,7 @@ namespace Hexocracy.Core
         {
             yield return new WaitForSeconds(dt);
 
-            inFlight = false;
+            InFlight = false;
             currentHex = nextHex;
 
             int bounceHeight = currentHex.H - previousHex.H;

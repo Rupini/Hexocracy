@@ -29,6 +29,19 @@ namespace Hexocracy
             instance.PostInitializeAllServices();
         }
 
+        public static void DestroyTemporary()
+        {
+            var objects = GameObject.FindObjectsOfType<MonoBehaviour>();
+
+            foreach(var obj in objects)
+            {
+                if(obj.GetType().IsDefined(typeof(TemporaryAttribute),false))
+                {
+                    GameObject.DestroyObject(obj.gameObject);
+                }
+            }
+        }
+
         public static T Get<T>() where T : class
         {
             var key = typeof(T).GetHashCode();

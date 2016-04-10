@@ -11,7 +11,7 @@ namespace Hexocracy.Core
         private const int ORIGIN_FLAG = 1;
 
         public LiPathFinder(int jumpUpHeight, int jumpDownHeight)
-            : base(jumpUpHeight, jumpDownHeight)
+            : base(jumpUpHeight, jumpDownHeight, null)
         {
 
         }

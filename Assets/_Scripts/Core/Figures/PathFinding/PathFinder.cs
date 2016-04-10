@@ -18,11 +18,14 @@ namespace Hexocracy.Core
         protected int jumpDownHeight;
         protected bool forced;
 
-        public PathFinder(int jumpUpHeight, int jumpDownHeight)
+        protected Func<Hex, Hex, int> calculateMovementCost;
+
+        public PathFinder(int jumpUpHeight, int jumpDownHeight, Func<Hex, Hex, int> calculateMovementCost)
         {
             map = GS.Get<GameMap>();
             this.jumpUpHeight = jumpUpHeight;
             this.jumpDownHeight = jumpDownHeight;
+            this.calculateMovementCost = calculateMovementCost;
         }
 
         public Path FindPathToDestination(Hex origin, Hex destination, bool forced, Func<Hex, PassibilityType> checkPassibiliy = null)
@@ -53,7 +56,7 @@ namespace Hexocracy.Core
             
 
             return new Path(new List<PathVertex>() { 
-                new PathVertex(origin, Mechanics.CalculateMovementCost(origin, destination)), 
+                new PathVertex(origin, calculateMovementCost(origin, destination)), 
                 new PathVertex(destination, 0) });
         }
 
