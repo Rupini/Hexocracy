@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Hexocracy.CustomEditor;
+using Hexocracy.Systems;
 
 namespace Hexocracy.Core
 {
@@ -73,8 +74,8 @@ namespace Hexocracy.Core
             data.scaleY = t.localScale.y;
             data.height = (int)(t.localScale.y / HexInfo.Scale.y);
 
-            defaultMaterial = Resources.Load<Material>("Models/Materials/hexDefaultMat");
-            additionMaterial = Resources.Load<Material>("Models/Materials/hexAdditionMat");
+            defaultMaterial = RM.LoadMaterial("hexDefaultMat");
+            additionMaterial = RM.LoadMaterial("hexAdditionMat");
 
             lastHasAddition = data.hasAddition;
         }
@@ -86,6 +87,6 @@ namespace Hexocracy.Core
             Destroy(this);
             return hex;
         }
-       
+
     }
 }

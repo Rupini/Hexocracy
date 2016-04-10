@@ -11,7 +11,8 @@ namespace Hexocracy
         public int actionPoints;
         public int baseHP;
         public int damage;
-        public float initiative;
+        public int satiety;
+        public int baseMass;
 
         public int jumpingAngle;
         public int jumpUpHeight;

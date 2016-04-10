@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Hexocracy.Core
 {
     public static class HexInfo
     {
-        private const string PREFAB_PATH = "Prefabs/Play/Hex";
+        private const string PREFAB_NAME = "Hex";
         private const float X_METRIC_K = 1.5f;
 
         private static Hex _prefab;
@@ -18,7 +19,7 @@ namespace Hexocracy.Core
             {
                 if (!_prefab)
                 {
-                    _prefab = Resources.Load<Hex>(PREFAB_PATH);
+                    _prefab = RM.GetPrefab<Hex>(PREFAB_NAME);
                 }
 
                 return _prefab;

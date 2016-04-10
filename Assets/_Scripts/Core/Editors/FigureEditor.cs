@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEditor;
 using URandom = UnityEngine.Random;
+using Hexocracy.Systems;
 
 namespace Hexocracy.Core
 {
@@ -19,7 +20,7 @@ namespace Hexocracy.Core
         {
             if (r.sharedMaterial == null)
             {
-                r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteMat"));
+                r.sharedMaterial = new Material(RM.LoadMaterial("editor_whiteMat"));
             }
 
             data.color = r.sharedMaterial.color;

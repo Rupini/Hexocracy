@@ -1,4 +1,5 @@
 ﻿using Hexocracy.Core;
+using Hexocracy.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +33,8 @@ namespace Hexocracy
             lifeTime = data.lifeTime;
             hasLifeTime = 0 != lifeTime;
 
-            r.material = Resources.Load<Material>("Models/Materials/whiteMat");
-            r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
-
+            r.material = RM.LoadMaterial("whiteMat");
+            r.material.mainTexture = RM.LoadTexture("whiteColor");
             r.material.color = data.color;
 
             var yOffset = !data.overrideOffsetK ? r.bounds.size.y * 0.5f : r.bounds.size.y * data.yOffsetK;

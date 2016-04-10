@@ -29,12 +29,14 @@ namespace Hexocracy.View
             if (target)
             {
                 transform.position = Camera.main.WorldToScreenPoint(target.t.position + new Vector3(0, 2, 0));
-                text.text = "<color=red>" + (int)target.HP + "/" + (int)target.MaxHP + "</color>\n" +
-                    "<color=green>" + target.RDamage + "</color>\n" +
-                    "<color=blue>" + target.AP + "/" + target.MaxAP + "</color>";
+                text.text = "<color=red>" + (int)target.HP + "/" + (int)target.MaxHP + "</color><color=brown>/" + (int)target.Satiety + "</color>\n" +
+                            "<color=green>" + target.RDamage + "</color>\n" +
+                            "<color=blue>" + target.AP + "/" + target.MaxAP + "</color>";
             }
             else
+            {
                 gameObject.SetActive(false);
+            }
         }
 
         public static void SetTarget(Figure target)

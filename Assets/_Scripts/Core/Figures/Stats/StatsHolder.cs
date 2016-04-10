@@ -23,14 +23,18 @@ namespace Hexocracy.Core
             }
         }
 
-        public Stat Add(StatType type, float baseValue, bool isDynamic)
+        public Stat Add(StatType type, bool isDynamic, float baseValue = 0 )
         {
             Stat stat = null;
 
             if (isDynamic)
+            {
                 stat = new DynamicStat(type, baseValue);
+            }
             else
+            {
                 stat = new Stat(type, baseValue);
+            }
 
             stats.Add(stat.Type, stat);
 

@@ -1,5 +1,6 @@
 ﻿using Hexocracy.HelpTools;
 using Hexocracy.Mech;
+using Hexocracy.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,15 +22,15 @@ namespace Hexocracy.Core
 
         protected DynamicStat hp;
         protected DynamicStat ap;
-        
+
         protected Stat minDamage;
         protected Stat maxDamage;
         protected Stat initiative;
 
-        private GameDependence<Stat> simpleAttack;
-        private GameDependence<Stat> penaltiAllyAttack;
-        private GameDependence<Stat> penaltyFalling;
-        private GameDependence<Stat> penaltyForcedMove;
+        protected Stat satiety;
+        protected Stat hunger;
+
+        private Dictionary<FigureDependenceType, GameDependence<Stat>> dependencies;
 
         #endregion
 
@@ -53,7 +54,7 @@ namespace Hexocracy.Core
         protected override void Awake()
         {
             base.Awake();
-            r.material.mainTexture = Resources.Load<Texture>("Models/whiteColor");
+            r.material.mainTexture = RM.LoadTexture("whiteColor");
         }
 
         [RawPrototype]
@@ -63,8 +64,8 @@ namespace Hexocracy.Core
             Owner = Player.GetByIndex(data.owner);
 
             //*!Crutch
-            r.material = Resources.Load<Material>("Models/Materials/whiteMat");
-            r.material.mainTexture = Resources.Load<Texture>("Models/whiteMat");
+            r.material = RM.LoadMaterial("whiteMat");
+            r.material.mainTexture = RM.LoadTexture("whiteMat");
             r.material.color = data.color;
             //_
 
@@ -79,19 +80,20 @@ namespace Hexocracy.Core
 
         protected virtual void InitStats(FigureData data)
         {
-            reds = statHolder.Add(StatType.Red, 0, false);
-            greens = statHolder.Add(StatType.Green, 0, false);
-            blues = statHolder.Add(StatType.Blue, 0, false);
+            reds = statHolder.Add(StatType.Red, false);
+            greens = statHolder.Add(StatType.Green, false);
+            blues = statHolder.Add(StatType.Blue, false);
 
-            mass = statHolder.Add(StatType.Mass, 10, false);
+            mass = statHolder.Add(StatType.Mass, false, data.baseMass);
 
-            hp = (DynamicStat)statHolder.Add(StatType.HealthPoints, data.baseHP, true);
-            ap = (DynamicStat)statHolder.Add(StatType.ActionPoints, data.actionPoints, true); ;
+            hp = (DynamicStat)statHolder.Add(StatType.HealthPoints, true, data.baseHP);
+            ap = (DynamicStat)statHolder.Add(StatType.ActionPoints, true, data.actionPoints);
 
-            maxDamage = statHolder.Add(StatType.MaxDamage, data.damage, false);
-            minDamage = statHolder.Add(StatType.MinDamage, 0, false);
+            maxDamage = statHolder.Add(StatType.MaxDamage, false, data.damage);
+            minDamage = statHolder.Add(StatType.MinDamage, false);
 
-            initiative = statHolder.Add(StatType.Initiative, data.initiative, false);
+            satiety = statHolder.Add(StatType.Satiety, false, data.satiety);
+            hunger = statHolder.Add(StatType.Hunger, false);
 
             statHolder.InitializeDependencies();
 
@@ -109,6 +111,10 @@ namespace Hexocracy.Core
             protected set
             {
                 hp.CurrValue = value;
+                if (hp.CurrValue <= 0)
+                {
+                    Destroy();
+                }
             }
         }
 
@@ -126,13 +132,24 @@ namespace Hexocracy.Core
             }
         }
 
-        public float Initiative { get { return initiative; } }
+        public float Satiety
+        {
+            get
+            {
+                return satiety;
+            }
+            protected set
+            {
+                satiety.BaseValue = value;
+            }
+        }
 
-        [RawPrototype]
         public void AddElement(Element element)
         {
             statHolder[(StatType)element.Kind].BaseValue += element.Count;
+            Satiety = dependencies[FigureDependenceType.SaturationByElement].Calculate(element.Count);
         }
+
 
         #endregion
 
@@ -142,19 +159,19 @@ namespace Hexocracy.Core
         {
             var provider = new FigureDependenceProvider(this, statHolder.GetStats(), DependenceType.Damage);
 
-            simpleAttack = provider.Get(DamageDepenenceType.SimpleAttack);
-            penaltiAllyAttack = provider.Get(DamageDepenenceType.PenaltiAllyAttack);
-            penaltyFalling = provider.Get(DamageDepenenceType.PenanltiFalling);
-            penaltyForcedMove = provider.Get(DamageDepenenceType.PenaltiForcedMove);
+            dependencies = new Dictionary<FigureDependenceType, GameDependence<Stat>>();
+
+            foreach (FigureDependenceType depType in Enum.GetValues(typeof(FigureDependenceType)))
+            {
+                dependencies[depType] = provider.Get(depType);
+            }
+
+
         }
 
         public void OnAttack(IAttacker attacker, float dmg)
         {
-            hp.CurrValue -= dmg;
-            if (hp.CurrValue <= 0)
-            {
-                Destroy();
-            }
+            HP -= dmg;
         }
 
         #endregion
@@ -166,12 +183,12 @@ namespace Hexocracy.Core
             {
                 if (forced && ap.CurrValue <= 0)
                 {
-                    figure.OnAttack(this, penaltiAllyAttack.Calculate(-bounceHeight));
+                    figure.OnAttack(this, dependencies[FigureDependenceType.PenaltiAllyAttack].Calculate(-bounceHeight));
                 }
             }
             else
             {
-                figure.OnAttack(this, simpleAttack.Calculate(-bounceHeight));
+                figure.OnAttack(this, dependencies[FigureDependenceType.SimpleAttack].Calculate(-bounceHeight));
             }
         }
 
@@ -179,13 +196,13 @@ namespace Hexocracy.Core
         {
             if (bounceHeight < -jumpDownHeight)
             {
-                OnAttack(this, penaltyFalling.Calculate(-bounceHeight));
+                OnAttack(this, dependencies[FigureDependenceType.PenanltiFalling].Calculate(-bounceHeight));
             }
         }
 
         protected override void OnForcedMovePenalti()
         {
-            OnAttack(this, penaltyForcedMove.Calculate());
+            OnAttack(this, dependencies[FigureDependenceType.PenaltiForcedMove].Calculate());
         }
 
         protected override void OnContentContact(IContainable item)
@@ -197,9 +214,19 @@ namespace Hexocracy.Core
         {
             if (isNewRound)
             {
-                AP = MaxAP;
+                AP = dependencies[FigureDependenceType.APRegenByTurn].Calculate();
+                Satiety = dependencies[FigureDependenceType.DeptionByTurn].Calculate();
             }
         }
+
+        protected override void OnTurnFinished(bool roundFinished)
+        {
+            if (roundFinished)
+            {
+                HP = dependencies[FigureDependenceType.HPLoseByHunger].Calculate();
+            }
+        }
+
         #endregion
 
         #region Implements

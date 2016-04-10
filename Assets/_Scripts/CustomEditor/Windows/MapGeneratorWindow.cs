@@ -6,6 +6,7 @@ using UnityEditor;
 using Hexocracy.Core;
 
 using UObject = UnityEngine.Object;
+using Hexocracy.Systems;
 
 namespace Hexocracy.CustomEditor
 {
@@ -47,7 +48,7 @@ namespace Hexocracy.CustomEditor
 
             if (!prototypeHex)
             {
-                prototypeHex = Resources.Load<HexEditor>("Prefabs/Editor/Hex");
+                prototypeHex = RM.GetEditorPrefab<HexEditor>("Hex");
             }
 
             if (!hexContainer)

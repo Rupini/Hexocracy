@@ -1,4 +1,5 @@
 ﻿using Hexocracy.CustomEditor;
+using Hexocracy.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Hexocracy.Core
             if (!Application.isPlaying)
             {
                 if (r.sharedMaterial == null)
-                    r.sharedMaterial = new Material(Resources.Load<Material>("Models/Materials/editor_whiteMat"));
+                    r.sharedMaterial = new Material(RM.LoadMaterial("editor_whiteMat"));
                 else
                     r.sharedMaterial = new Material(r.sharedMaterial);
             }

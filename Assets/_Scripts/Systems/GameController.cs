@@ -39,12 +39,13 @@ namespace Hexocracy.Systems
 
         private void InitHudComponents()
         {
-            Canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Play/Canvas"));
+            Canvas = RM.InstantiatePrefab<Canvas>("Canvas");
 
             MainCamera = FindObjectOfType<Camera>();
+
             if (!MainCamera)
             {
-                MainCamera = Instantiate(Resources.Load<Camera>("Prefabs/Play/MainCamera"));
+                MainCamera = RM.InstantiatePrefab<Camera>("MainCamera");
             }
         }
 

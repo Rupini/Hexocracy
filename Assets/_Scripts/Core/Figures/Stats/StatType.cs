@@ -17,6 +17,8 @@ namespace Hexocracy
         ActionPoints = 11,
         MinDamage = 12,
         MaxDamage = 13,
-        Initiative = 14
+
+        Satiety = 20,
+        Hunger = 21
     }
 }

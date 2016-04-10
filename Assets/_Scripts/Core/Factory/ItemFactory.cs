@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexocracy.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Hexocracy.Core
 
         public ItemBox Create(ItemData data, Hex hex, Player owner)
         {
-            var itemBox = GameObject.Instantiate(Resources.Load<ItemBox>("Prefabs/Play/Element"));
+            var itemBox = RM.InstantiatePrefab<ItemBox>("Element");
 
             if (data.type == ItemType.Element)
             {
