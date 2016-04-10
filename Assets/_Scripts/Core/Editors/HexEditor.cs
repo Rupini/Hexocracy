@@ -74,8 +74,8 @@ namespace Hexocracy.Core
             data.scaleY = t.localScale.y;
             data.height = (int)(t.localScale.y / HexInfo.Scale.y);
 
-            defaultMaterial = RM.LoadMaterial("hexDefaultMat");
-            additionMaterial = RM.LoadMaterial("hexAdditionMat");
+            defaultMaterial = new Material(RM.LoadMaterial("hexDefaultMat"));
+            additionMaterial = new Material(RM.LoadMaterial("hexAdditionMat"));
 
             lastHasAddition = data.hasAddition;
         }

@@ -14,7 +14,6 @@ namespace Hexocracy.CustomEditor
 
     }
 
-    
 
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyPropertyDrawer : PropertyDrawer

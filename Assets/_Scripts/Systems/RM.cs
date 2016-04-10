@@ -15,7 +15,7 @@ namespace Hexocracy.Systems
 
         private const string PREFAB_PATH = "Prefabs/Play/";
         private const string EDITOR_PREFAB_PATH = "Prefabs/Editor/";
-        private const string MATERIAL_PATH = "Models/Material/";
+        private const string MATERIAL_PATH = "Models/Materials/";
         private const string TEXTURE_PATH = "Models/Texture/";
 
         public static T GetPrefab<T>(string prefabName) where T : Behaviour
@@ -31,6 +31,11 @@ namespace Hexocracy.Systems
         public static T InstantiatePrefab<T>(string prefabName) where T : Behaviour
         {
             return GameObject.Instantiate<T>(Resources.Load<T>(PREFAB_PATH + prefabName));
+        }
+
+        public static T InstantiateEditorPrefab<T>(string prefabName) where T : Behaviour
+        {
+            return GameObject.Instantiate<T>(Resources.Load<T>(EDITOR_PREFAB_PATH + prefabName));
         }
 
         public static Material LoadMaterial(string materialName)

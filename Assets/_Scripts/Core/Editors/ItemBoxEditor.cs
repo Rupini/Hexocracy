@@ -24,9 +24,13 @@ namespace Hexocracy.Core
             if (!Application.isPlaying)
             {
                 if (r.sharedMaterial == null)
+                {
                     r.sharedMaterial = new Material(RM.LoadMaterial("editor_whiteMat"));
+                }
                 else
+                {
                     r.sharedMaterial = new Material(r.sharedMaterial);
+                }
             }
         }
 

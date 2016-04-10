@@ -52,8 +52,6 @@ namespace Hexocracy.Core
             Height = r.bounds.size.y;
 
             DefineStartHex(0.5f * r.bounds.size.y);
-
-            
         }
 
         #endregion

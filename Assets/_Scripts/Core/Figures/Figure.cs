@@ -61,12 +61,13 @@ namespace Hexocracy.Core
         public override void Initialize(FigureData data)
         {
             base.Initialize(data);
-            Owner = Player.GetByIndex(data.owner);
+
+            Owner = Player.GetByIndex(data.playerIndex);
 
             //*!Crutch
             r.material = RM.LoadMaterial("whiteMat");
             r.material.mainTexture = RM.LoadTexture("whiteMat");
-            r.material.color = data.color;
+            r.material.color = Owner.TeamColor;
             //_
 
             InitStats(data);

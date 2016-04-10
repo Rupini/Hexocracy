@@ -9,9 +9,6 @@ namespace Hexocracy.Systems
         public static Camera MainCamera { get; private set; }
         public static Canvas Canvas { get; private set; }
 
-        [RawPrototype]
-        public List<PlayerData> players;
-
         private void Awake()
         {
             GS.Initialize();
@@ -34,7 +31,7 @@ namespace Hexocracy.Systems
 
         private void InitPlayers()
         {
-            Player.Initialize(players);
+            Player.Initialize(PlayerPool.GetPlayers());
         }
 
         private void InitHudComponents()

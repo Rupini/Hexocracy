@@ -78,6 +78,13 @@ Material:
           m_Texture: {fileID: 0}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
+      data:
+        first:
+          name: _Mask
+        second:
+          m_Texture: {fileID: 2800000, guid: 6155c420c5cbd0344aab1cb7b1be9efa, type: 3}
+          m_Scale: {x: 1, y: 1}
+          m_Offset: {x: 0, y: 0}
     m_Floats:
       data:
         first:
@@ -139,7 +146,7 @@ Material:
       data:
         first:
           name: _TargetColor
-        second: {r: .709803939, g: .898039281, b: .113725498, a: 1}
+        second: {r: 1, g: 0, b: .765517235, a: 1}
       data:
         first:
           name: _CustomColor

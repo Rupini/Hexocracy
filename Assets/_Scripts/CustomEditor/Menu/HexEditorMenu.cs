@@ -21,19 +21,25 @@ namespace Hexocracy.CustomEditor
         [MenuItem("HexEditor/Refresh Map")]
         public static void RefreshMap()
         {
-            GameObject.FindObjectsOfType<MonoBehaviour>().ToList().ForEach(obj =>
-                {
-                    if (obj.GetType().IsDefined(typeof(ExecuteInEditMode), true))
-                    {
-                        var awakeMethod = obj.GetType().GetMethod("Awake", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            CallMethodForAll("Awake");
+            CallMethodForAll("Start");
+        }
 
-                        if (awakeMethod != null)
-                        {
-                            Debug.Log(obj.name + " Refreshed");
-                            awakeMethod.Invoke(obj, null);
-                        }
+        private static void CallMethodForAll(string methodName)
+        {
+            GameObject.FindObjectsOfType<MonoBehaviour>().ToList().ForEach(obj =>
+            {
+                if (obj.GetType().IsDefined(typeof(ExecuteInEditMode), true))
+                {
+                    var awakeMethod = obj.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                    if (awakeMethod != null)
+                    {
+                        Debug.Log(obj.name + " " + methodName + "!");
+                        awakeMethod.Invoke(obj, null);
                     }
-                });
+                }
+            });
         }
 
         [MenuItem("HexEditor/Show Raw Prototypes")]
@@ -42,17 +48,17 @@ namespace Hexocracy.CustomEditor
             var types = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.Namespace.Contains(ProjectInfo.MAIN_NAMESPACE));
             var rawAttributeType = typeof(RawPrototypeAttribute);
 
-            foreach(var type in types)
+            foreach (var type in types)
             {
-                if(type.IsDefined(rawAttributeType, false))
+                if (type.IsDefined(rawAttributeType, false))
                 {
                     Debug.LogWarning("Class " + type.FullName + " is Raw Prototype");
                 }
                 else
                 {
-                    foreach(var method in type.GetMethods())
+                    foreach (var method in type.GetMethods())
                     {
-                        if(method.IsDefined(rawAttributeType, false))
+                        if (method.IsDefined(rawAttributeType, false))
                         {
                             Debug.LogWarning("Class " + type.FullName + " has Raw Prototype mehtod " + method.Name);
                         }

@@ -17,5 +17,7 @@ namespace Hexocracy.Core
         public List<int> allies;
 
         public Color color;
+
+        
     }
 }
