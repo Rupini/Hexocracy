@@ -20,12 +20,9 @@ namespace Hexocracy.Core
         public static Player NeutralPassive { get; private set; }
         public static Player NeutralAggressive { get; private set; }
 
-        public static List<Player> GetAll
+        public static List<Player> GetAll()
         {
-            get
-            {
-                return players.Values.ToList();
-            }
+            return players.Values.ToList();
         }
 
         public static Player GetByIndex(int index)

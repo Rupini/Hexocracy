@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Hexocracy.Core
 {
+    [RawPrototype]
     public class DummyDecorator : IDecorator
     {
         private Color defaultColor;
@@ -27,16 +28,6 @@ namespace Hexocracy.Core
 
             defState = true;
         }
-
-        //public void SetTexture(string textureName)
-        //{
-        //    renderer.material.mainTexture = RM.LoadTexture(textureName);
-        //}
-
-        //public void SetMaterial(string materialName)
-        //{
-        //    renderer.material = RM.LoadMaterial(materialName);
-        //}
 
         public void SwitchState()
         {

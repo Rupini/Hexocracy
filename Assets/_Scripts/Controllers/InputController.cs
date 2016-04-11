@@ -80,6 +80,8 @@ namespace Hexocracy.Controller
 
                 hud.ShowStatsPanel(actor.Figure);
 
+                selectedFigure = actor.Figure;
+
                 return true;
             }
 

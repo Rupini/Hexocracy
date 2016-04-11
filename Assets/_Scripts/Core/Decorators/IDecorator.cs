@@ -8,9 +8,6 @@ namespace Hexocracy.Core
     public interface IDecorator
     {
         void SwitchState();
-
-        //void SetTexture(string textureName);
-
-        //void SetMaterial(string materialName);
+       
     }
 }

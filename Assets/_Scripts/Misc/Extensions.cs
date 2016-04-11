@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using URandom = UnityEngine.Random;
 
 namespace Hexocracy.HelpTools
@@ -29,6 +30,23 @@ namespace Hexocracy.HelpTools
                 index = -1;
                 return default(T);
             }
+        }
+
+        public static List<T> Mix<T>(this List<T> list)
+        {
+            var mixedSet= new HashSet<T>();
+
+            while (mixedSet.Count < list.Count)
+            {
+                var item = list.GetRandom();
+
+                if(!mixedSet.Contains(item))
+                {
+                    mixedSet.Add(item);
+                }
+            }
+
+            return mixedSet.ToList();
         }
     }
 }

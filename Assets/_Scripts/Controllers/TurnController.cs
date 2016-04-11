@@ -1,7 +1,11 @@
-﻿using Hexocracy.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
 using UnityEngine;
+
+using Hexocracy.Core;
+using Hexocracy.HelpTools;
+
 
 namespace Hexocracy.Controller
 {
@@ -23,6 +27,9 @@ namespace Hexocracy.Controller
         private bool GG;
 
         private bool alreadyStarted;
+
+        private List<Player> order;
+
         #endregion
 
         #region Initialize
@@ -45,6 +52,9 @@ namespace Hexocracy.Controller
             if (!alreadyStarted)
             {
                 alreadyStarted = true;
+
+                order = Player.GetAll().Mix();
+
                 Next(true);
             }
             else
@@ -95,14 +105,12 @@ namespace Hexocracy.Controller
             }
         }
 
-        [RawPrototype]
         private void NextRound()
         {
-            actors = container.GetAll();
+            actors = CollectActors();
 
             if (actors.Count > 0)
             {
-                //actors.Sort((f1, f2) => (int)f2.Initiative - (int)f1.Initiative);
                 currentFigureIndex = -1;
             }
             else
@@ -134,6 +142,29 @@ namespace Hexocracy.Controller
             {
                 inputController.ActivateActor(pickedActor);
             }
+        }
+
+        private List<IActor> CollectActors()
+        {
+            var actors = new List<IActor>();
+            var actorsByPlayers = new Dictionary<int, List<IActor>>();
+
+            foreach (var actor in container.GetAll())
+            {
+                if (!actorsByPlayers.ContainsKey(actor.Owner))
+                {
+                    actorsByPlayers[actor.Owner] = new List<IActor>();
+                }
+
+                actorsByPlayers[actor.Owner].Add(actor);
+            }
+
+            foreach (var player in order)
+            {
+                actors.AddRange(actorsByPlayers[player]);
+            }
+
+            return actors;
         }
 
         #endregion
